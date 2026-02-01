@@ -27,13 +27,22 @@ export function HeroSection() {
         </div>
 
         {/* Right Illustration */}
-        <div className="flex justify-center">
-          <img
-            src="/medicine-hero.png"
-            alt="Online Medicine Store"
-            className="max-w-md w-full"
-          />
-        </div>
+       <div className="relative flex justify-center w-full">
+  <img
+    src="/images/medistorebd_hero.jpg"
+    alt="Online Medicine Store"
+    className="
+      w-full
+      max-w-sm
+      sm:max-w-md
+      md:max-w-lg
+      lg:max-w-xl
+      xl:max-w-2xl
+      object-contain
+    "
+  />
+</div>
+
       </div>
     </section>
   );

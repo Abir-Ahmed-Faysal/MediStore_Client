@@ -5,7 +5,7 @@ import { TrustAndProcessSection } from "@/components/modules/homepage/trust-proc
 
 export default async function Home() {
   return (
-    <div className="max-w-7xl mx-auto  gap-6">
+    <div className="max-w-8xl mx-auto  gap-6">
       <HeroSection />
       <CategoriesSection />
       <FeaturedMedicinesSection />

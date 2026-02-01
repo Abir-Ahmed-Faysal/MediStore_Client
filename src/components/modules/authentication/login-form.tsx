@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
+import Link from "next/link";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -30,7 +31,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const handleGoogleLogin = async () => {
     const data = authClient.signIn.social({
       provider: "google",
-      callbackURL: "http://localhost:3000",
+      callbackURL: process.env.CALLBACK_URL,
     });
 
     console.log(data);
@@ -137,6 +138,15 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         >
           Continue with Google
         </Button>
+         <div className="text-sm text-center text-muted-foreground">
+          Register new account?{" "}
+          <Link
+            href="/register"
+            className="font-medium text-primary hover:underline"
+          >
+            Register
+          </Link>
+        </div>
       </CardFooter>
     </Card>
   );
