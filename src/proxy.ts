@@ -1,45 +1,51 @@
-import { NextRequest, NextResponse } from "next/server";
-import { userService } from "./services/user.service";
-import { Roles } from "./constants/roles";
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+
+import { userService } from "./services/user.service"
+import { Role } from "./constants/roles"
 
 export async function proxy(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
 
-  let isAuthenticated = false;
-  let isAdmin = false;
+   const { pathname } = request.nextUrl
 
-  const { data } = await userService.getSession();
+    const {data}= await userService.getSession()
+  
 
-  if (data) {
-    isAuthenticated = true;
-    isAdmin = data.user.role === Roles.admin;
-  }
+    // example: get role from cookie / token
+    const role = data?.user?.role
 
-  //* User in not authenticated at all
-  if (!isAuthenticated) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+    // not logged in
+    if (!role) {
+        return NextResponse.redirect(new URL("/login", request.url))
+    }
 
-  //* User is authenticated and role = ADMIN
-  //* User can not visit user dashboard
-  if (isAdmin && pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/admin-dashboard", request.url));
-  }
+    // admin trying to access user dashboard
+    if (role === Role.admin && pathname.startsWith("/dashboard")) {
+        return NextResponse.redirect(new URL("/admin-dashboard", request.url))
+    }
 
-  //* User is authenticated and role = USER
-  //* User can not visit admin-dashboard
-  if (!isAdmin && pathname.startsWith("/admin-dashboard")) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
+    // seller trying to access user/admin dashboard
+    if (role === Role.seller && pathname.startsWith("/dashboard")) {
+        return NextResponse.redirect(new URL("/seller-dashboard", request.url))
+    }
 
-  return NextResponse.next();
+    // non-admin accessing admin dashboard
+    if (role !== Role.admin && pathname.startsWith("/admin-dashboard")) {
+        return NextResponse.redirect(new URL("/dashboard", request.url))
+    }
+
+    // non-seller accessing seller dashboard
+    if (role !== Role.seller && pathname.startsWith("/seller-dashboard")) {
+        return NextResponse.redirect(new URL("/dashboard", request.url))
+    }
+
+    return NextResponse.next()
 }
 
 export const config = {
   matcher: [
-    "/dashboard",
     "/dashboard/:path*",
-    "/admin-dashboard",
     "/admin-dashboard/:path*",
+    "/seller-dashboard/:path*",
   ],
-};
+}
