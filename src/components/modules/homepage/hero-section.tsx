@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export function HeroSection() {
   return (
@@ -27,19 +28,17 @@ export function HeroSection() {
         </div>
 
         {/* Right Illustration */}
-       <div className="relative flex justify-center w-full">
-  <img
+<div className="relative flex justify-center w-full">
+  <Image   loading="eager"
     src="/images/medistorebd_hero.jpg"
     alt="Online Medicine Store"
-    className="
-      w-full
-      max-w-sm
-      sm:max-w-md
-      md:max-w-lg
-      lg:max-w-xl
-      xl:max-w-2xl
-      object-contain
-    "
+    className="object-contain"
+    width={1200} // image original width
+    height={800} // image original height
+    sizes="(max-width: 640px) 100vw, 
+           (max-width: 768px) 75vw, 
+           (max-width: 1024px) 50vw, 
+           33vw"
   />
 </div>
 

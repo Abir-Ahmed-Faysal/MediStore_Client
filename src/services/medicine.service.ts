@@ -16,7 +16,7 @@ interface GetBlogsParams {
   search?: string;
 }
 
-export const blogService = {
+export const medicineService = {
   getBlogPosts: async function (
     params?: GetBlogsParams,
     options?: ServiceOptions,
@@ -68,4 +68,8 @@ export const blogService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
+
+  getPost: async()=>{
+    
+  }
 };

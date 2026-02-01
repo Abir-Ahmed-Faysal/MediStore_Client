@@ -1,7 +1,7 @@
 "use server";
 
-import { blogService } from "@/services/blog.service";
+import { medicineService } from "@/services/medicine.service";
 
 export const getBlogs = async () => {
-  return await blogService.getBlogPosts();
+  return await medicineService.getBlogPosts();
 };
