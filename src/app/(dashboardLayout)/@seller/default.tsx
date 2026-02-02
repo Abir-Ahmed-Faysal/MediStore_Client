@@ -1,5 +1,3 @@
-
-
-export const SellerDefault = () => {
+export default function sellerDefault() {
   return null;
-};
+}

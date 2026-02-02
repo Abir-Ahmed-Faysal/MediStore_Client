@@ -6,7 +6,7 @@ export const categoryServices = {
   getCategories: async () => {
     const res = await fetch(`${API_URL}/categories`, {
       
-      next: { revalidate: 15 }, // 600 seconds = 10 minutes
+      next: { revalidate: 10 }, 
     });
 
     if (!res.ok) {

@@ -1,3 +1,3 @@
-export  function AdminDefault() {
-  return <div></div>;
+export default  function AdminDefault() {
+  return <div>dd</div>;
 }

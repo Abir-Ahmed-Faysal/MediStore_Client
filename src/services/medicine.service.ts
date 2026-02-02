@@ -2,74 +2,122 @@ import { env } from "@/env";
 
 const API_URL = env.API_URL;
 
-//* No Dynamic and No { cache: no-store } : SSG -> Static Page
-//* { cache: no-store } : SSR -> Dynamic Page
-//* next: { revalidate: 10 } : ISR -> Mix between static and dynamic
+/* ==============================
+   Types
+================================ */
 
-interface ServiceOptions {
+export interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPage: number;
+}
+
+export interface CategoryRef {
+  id: string;
+  category_name: string;
+}
+
+export interface Medicine {
+  id: string;
+  title: string;
+  description: string;
+  manufacturer: string;
+  price: string;
+  stock: number;
+  sellerId: string;
+  categoryId: string;
+  categoryRef: CategoryRef;
+}
+
+export interface MedicineListResponse {
+  data: Medicine[];
+  pagination: Pagination;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
+export interface ServiceOptions {
   cache?: RequestCache;
   revalidate?: number;
 }
 
-interface GetBlogsParams {
-  isFeatured?: boolean;
+export interface GetMedicinesParams {
+  category?: string;
   search?: string;
+  page?: number;
+  limit?: number;
 }
 
+/* ==============================
+   Service
+================================ */
+
 export const medicineService = {
-  getBlogPosts: async function (
-    params?: GetBlogsParams,
+  
+  async getAllMedicines(
+    params?: GetMedicinesParams,
     options?: ServiceOptions,
   ) {
     try {
-      const url = new URL(`${API_URL}/posts`);
+      const url = new URL(`${API_URL}/medicines`);
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
           if (value !== undefined && value !== null && value !== "") {
-            url.searchParams.append(key, value);
+            url.searchParams.append(key, String(value));
           }
         });
       }
 
-      const config: RequestInit = {};
+      const res = await fetch(url.toString(), {
+        cache: options?.cache,
+        next: options?.revalidate
+          ? { revalidate: options.revalidate }
+          : undefined,
+      });
 
-      if (options?.cache) {
-        config.cache = options.cache;
+      if (!res.ok) {
+        throw new Error("Failed to fetch medicines");
       }
 
-      if (options?.revalidate) {
-        config.next = { revalidate: options.revalidate };
-      }
+      const json: ApiResponse<MedicineListResponse> = await res.json();
 
-      const res = await fetch(url.toString(), config);
-
-      const data = await res.json();
-
-      // This is an example
-      //   if(data.success) {
-      //     return
-      //   }
-
-      return { data: data, error: null };
-    } catch (err) {
-      return { data: null, error: { message: "Something Went Wrong" } };
+      return { data: json.data, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: { message: (error as Error).message },
+      };
     }
   },
 
-  getBlogById: async function (id: string) {
+  
+  async getMedicineById(id: string) {
     try {
-      const res = await fetch(`${API_URL}/posts/${id}`);
 
-      const data = await res.json();
+    
 
-      return { data: data, error: null };
-    } catch (err) {
-      return { data: null, error: { message: "Something Went Wrong" } };
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/medicines/${id}`, {
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        throw new Error("Medicine not found");
+      }
+
+      const json: ApiResponse<Medicine> = await res.json();
+
+      return { data: json.data, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: { message: (error as Error).message },
+      };
     }
   },
-
-  getPost: async()=>{
-    
-  }
 };

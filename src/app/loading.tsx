@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Id = () => {
+const loading = () => {
     return (
         <div>
-            
+             this is lading Page
         </div>
     );
 };
 
-export default Id;
+export default loading;
