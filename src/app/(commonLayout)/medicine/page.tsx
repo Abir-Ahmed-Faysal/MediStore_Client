@@ -31,7 +31,7 @@ export default async function MedicinesPage() {
 
               <p className="font-semibold">৳ {medicine.price}</p>
 
-              <Link href={`/medicines/${medicine.id}`}>
+              <Link href={`/medicine/${medicine.id}`}>
                 <Button size="sm" className="w-full">
                   View details
                 </Button>
