@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/cart";
 import { Badge } from "@/components/ui/badge";
 import { BlogPost } from "@/types";
 

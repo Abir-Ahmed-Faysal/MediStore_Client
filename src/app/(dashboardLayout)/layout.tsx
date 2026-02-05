@@ -79,8 +79,8 @@ export default async function DashboardLayout({
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+        <div className="flex flex-1 flex-col gap-4  p-4 pt-0">
+          <div className="w-full  flex-1 overflow-auto">
             {roleContent}
           </div>
         </div>

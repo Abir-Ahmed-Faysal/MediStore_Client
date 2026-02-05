@@ -72,7 +72,7 @@ export default function OrdersPage() {
             <Badge>{order.status}</Badge>
           </div>
 
-          <Link href={`/profile/myorder/${order._id}`}>
+          <Link href={`/dashboard/myorder/${order._id}`}>
             <Button variant="outline" className="w-full mt-4">
               See Details
             </Button>

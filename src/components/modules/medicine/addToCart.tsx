@@ -22,11 +22,6 @@ interface CartItem {
 export function AddToCart({ id, title, price, stock }: AddToCartProps) {
   const [quantity, setQuantity] = useState(1);
 
-  const router = useRouter();
-  const user = {
-    name: "user",
-    role: "USER",
-  };
 
   const increase = () => {
     if (quantity < stock) {
@@ -41,11 +36,7 @@ export function AddToCart({ id, title, price, stock }: AddToCartProps) {
   };
 
   const handleAddToCart = () => {
-    if (!user) {
-      toast.error("Please login to add items to the cart");
-      router.push("/login");
-      return;
-    }
+   
 
     const stored = localStorage.getItem("cart");
     const cart: CartItem[] = stored ? JSON.parse(stored) : [];

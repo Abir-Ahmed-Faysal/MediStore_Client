@@ -1,8 +1,6 @@
-
-
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CancelOrderButton } from "@/components/modules/order/cancelOrderButton";
 
 type OrderStatus =
   | "PLACED"
@@ -29,8 +27,8 @@ export default async function OrderDetailsPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-    const { id } = await params;
-   
+  const { id } = await params;
+
   const order: Order = {
     _id: id,
     status: "DELIVERED",
@@ -41,17 +39,6 @@ export default async function OrderDetailsPage({
       { medicineId: "M2", name: "Seclo", price: 80, quantity: 1 },
       { medicineId: "M3", name: "Antacid", price: 50, quantity: 3 },
     ],
-  };
-
-  const handleCancel = () => {
-    if (order.status !== "PLACED") {
-      alert(
-        `Current status "${order.status}" cannot be cancelled. Only PLACED orders can be cancelled.`,
-      );
-      return;
-    }
-
-    console.log("CANCEL ORDER ID:", order._id);
   };
 
   return (
@@ -80,9 +67,10 @@ export default async function OrderDetailsPage({
         <Badge>{order.status}</Badge>
       </div>
 
-      <Button variant="destructive" className="w-full" onClick={handleCancel}>
-        Cancel Order
-      </Button>
+      <CancelOrderButton
+        orderId={order?._id}
+        status={order?.status}
+      ></CancelOrderButton>
     </div>
   );
 }

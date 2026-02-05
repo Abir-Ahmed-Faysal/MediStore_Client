@@ -1,6 +1,6 @@
 import { medicineService } from "@/services/medicine.service";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/cart";
 import { Button } from "@/components/ui/button";
 import MedicineFilters from "@/components/modules/medicine/medicineFilter";
 import Pagination from "@/components/modules/medicine/paginaition";
