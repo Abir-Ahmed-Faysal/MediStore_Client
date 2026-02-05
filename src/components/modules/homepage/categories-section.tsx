@@ -3,6 +3,7 @@ import { categoryServices } from "@/services/category.service";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CategoryCard } from "./categoryCard";
+import { Suspense } from "react";
 
 // Optional default icons
 const defaultIcons: Record<string, string> = {
@@ -14,7 +15,7 @@ const defaultIcons: Record<string, string> = {
   "Personal Care": "🧴",
 };
 
-export const revalidate = 10;
+// export const revalidate = 10;
 
 export async function CategoriesSection() {
   try {
@@ -29,6 +30,8 @@ export async function CategoriesSection() {
           <h2 className="mb-10 text-center text-3xl font-semibold">
             Shop by Category
           </h2>
+<Suspense fallback={"loading"}>
+
 
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             {categories.map(
@@ -42,6 +45,7 @@ export async function CategoriesSection() {
               )
             )}
           </div>
+          </Suspense>
 
           {/* 🔹 See more button */}
           <div className="mt-10 text-center">

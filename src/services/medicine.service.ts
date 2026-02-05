@@ -51,6 +51,10 @@ export interface GetMedicinesParams {
   search?: string;
   page?: number;
   limit?: number;
+  manufacturer?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  skip?: number;
 }
 
 /* ==============================
@@ -58,13 +62,13 @@ export interface GetMedicinesParams {
 ================================ */
 
 export const medicineService = {
-  
+
   async getAllMedicines(
     params?: GetMedicinesParams,
     options?: ServiceOptions,
   ) {
     try {
-      const url = new URL(`${API_URL}/medicines`);
+      const url = new URL(`http://localhost:5000/api/medicines`);
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -73,6 +77,8 @@ export const medicineService = {
           }
         });
       }
+
+
 
       const res = await fetch(url.toString(), {
         cache: options?.cache,
@@ -86,6 +92,7 @@ export const medicineService = {
       }
 
       const json: ApiResponse<MedicineListResponse> = await res.json();
+ 
 
       return { data: json.data, error: null };
     } catch (error) {
@@ -96,12 +103,9 @@ export const medicineService = {
     }
   },
 
-  
+
   async getMedicineById(id: string) {
     try {
-
-    
-
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/medicines/${id}`, {
         cache: "no-store",
       });

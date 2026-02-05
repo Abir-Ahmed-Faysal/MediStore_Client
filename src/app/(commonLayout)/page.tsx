@@ -5,7 +5,6 @@ import { TrustAndProcessSection } from "@/components/modules/homepage/trust-proc
 
 
 export default async function Home() {
-  // const session =await userService.getSession();
   return (
     <div className="max-w-8xl mx-auto  gap-6">
       <HeroSection />

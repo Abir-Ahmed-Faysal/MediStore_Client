@@ -1,6 +1,8 @@
 "use client";
 
+import React, { useState } from "react";
 import { Menu } from "lucide-react";
+import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
@@ -19,8 +21,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import Link from "next/link";
+
 import { ModeToggle } from "./ModeToggle";
+import { logout } from "@/actions/logoutAction";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 interface MenuItem {
   title: string;
@@ -29,6 +34,13 @@ interface MenuItem {
   icon?: React.ReactNode;
   items?: MenuItem[];
 }
+
+export type UserDataType = {
+  id: string;
+  name: string;
+  email: string;
+  role?: string;
+};
 
 interface Navbar1Props {
   className?: string;
@@ -41,6 +53,10 @@ interface Navbar1Props {
   };
   menu?: MenuItem[];
   auth?: {
+    cart: {
+      title: string;
+      url: string;
+    };
     login: {
       title: string;
       url: string;
@@ -50,117 +66,159 @@ interface Navbar1Props {
       url: string;
     };
   };
+  data?: {
+    session: any;
+    user: UserDataType;
+  };
 }
 
 const Navbar = ({
+  data,
   logo = {
     url: "/",
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
+    src: "./images/MediStore.png",
     alt: "logo",
-    title: "Next Blog",
+    title: "MediStore",
   },
   menu = [
     { title: "Home", url: "/" },
-    {
-      title: "Blogs",
-      url: "/blogs",
-    },
-    {
-      title: "About",
-      url: "/about",
-    },
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-    },
+    { title: "Medicines", url: "/medicine" },
+    { title: "My order", url: "/orders" },
+    { title: "Dashboard", url: "/dashboard" },
   ],
   auth = {
+    cart: { title: "Cart", url: "/cart" },
     login: { title: "Login", url: "/login" },
     signup: { title: "Register", url: "/register" },
   },
   className,
 }: Navbar1Props) => {
+  const existUserData = data?.user?.email;
+
+  const [userData, setUserData] = useState(existUserData);
+
+  const handleLogout = async () => {
+    const logOut = await authClient.signOut();
+    if (logOut) {
+      toast.success("logout successful");
+      setUserData(undefined);
+      return;
+    }
+    if (!logout) {
+      toast.error("login failed");
+    }
+  };
+
+  const deskTab = userData ? (
+    <div className="flex gap-2">
+      <Button asChild variant="outline" size="sm">
+        <Link href={auth.cart.url}>{auth.cart.title}</Link>
+      </Button>
+
+      <Button variant="outline" size="sm" onClick={handleLogout}>
+        Logout
+      </Button>
+    </div>
+  ) : (
+    <div className="flex gap-2">
+      <Button asChild variant="outline" size="sm">
+        <Link href={auth.login.url}>{auth.login.title}</Link>
+      </Button>
+      <Button asChild size="sm">
+        <Link href={auth.signup.url}>{auth.signup.title}</Link>
+      </Button>
+    </div>
+  );
+
   return (
-    <section className={cn("py-4 ", className)}>
+    <section className={cn(className)}>
       <div className="container mx-auto px-4">
-        {/* Desktop Menu */}
+        {/* Desktop */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">
-            {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
+            <Link href={logo.url} className="flex items-center gap-2">
               <img
                 src={logo.src}
-                className="max-h-8 dark:invert"
+                className="max-h-16 dark:invert"
                 alt={logo.alt}
               />
-              <span className="text-lg font-semibold tracking-tighter">
-                {logo.title}
-              </span>
-            </a>
-            <div className="flex items-center">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {menu.map((item) => renderMenuItem(item))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
+            </Link>
+
+            <NavigationMenu>
+              <NavigationMenuList>
+                {menu.map((item) => renderMenuItem(item))}
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
+
           <div className="flex gap-2">
             <ModeToggle />
-            <Button asChild variant="outline" size="sm">
-              <Link href={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href={auth.signup.url}>{auth.signup.title}</Link>
-            </Button>
+            {deskTab}
           </div>
         </nav>
 
-        {/* Mobile Menu */}
+        {/* Mobile */}
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
+            <Link href={logo.url}>
               <img
                 src={logo.src}
                 className="max-h-8 dark:invert"
                 alt={logo.alt}
               />
-            </a>
+            </Link>
+
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
                   <Menu className="size-4" />
                 </Button>
               </SheetTrigger>
+
               <SheetContent className="overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>
-                    <a href={logo.url} className="flex items-center gap-2">
+                    <Link href={logo.url}>
                       <img
                         src={logo.src}
                         className="max-h-8 dark:invert"
                         alt={logo.alt}
                       />
-                    </a>
+                    </Link>
                   </SheetTitle>
                 </SheetHeader>
+
                 <div className="flex flex-col gap-6 p-4">
                   <Accordion
                     type="single"
                     collapsible
-                    className="flex w-full flex-col gap-4"
+                    className="flex flex-col gap-4"
                   >
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild>
-                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
+                    {userData ? (
+                      <>
+                        <Button asChild variant="outline">
+                          <Link href={auth.cart.url}>{auth.cart.title}</Link>
+                        </Button>
+                        <Button variant="outline" onClick={handleLogout}>
+                          Logout
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button asChild variant="outline">
+                          <Link href={auth.login.url}>{auth.login.title}</Link>
+                        </Button>
+                        <Button asChild>
+                          <Link href={auth.signup.url}>
+                            {auth.signup.title}
+                          </Link>
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>
@@ -172,25 +230,21 @@ const Navbar = ({
   );
 };
 
-const renderMenuItem = (item: MenuItem) => {
-  return (
-    <NavigationMenuItem key={item.title}>
-      <NavigationMenuLink
-        asChild
-        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
-      >
-        <Link href={item.url}>{item.title}</Link>
-      </NavigationMenuLink>
-    </NavigationMenuItem>
-  );
-};
+const renderMenuItem = (item: MenuItem) => (
+  <NavigationMenuItem key={item.title}>
+    <NavigationMenuLink
+      asChild
+      className="group inline-flex h-10 items-center rounded-md px-4 py-2 text-sm font-medium hover:bg-muted"
+    >
+      <Link href={item.url}>{item.title}</Link>
+    </NavigationMenuLink>
+  </NavigationMenuItem>
+);
 
-const renderMobileMenuItem = (item: MenuItem) => {
-  return (
-    <Link key={item.title} href={item.url} className="text-md font-semibold">
-      {item.title}
-    </Link>
-  );
-};
+const renderMobileMenuItem = (item: MenuItem) => (
+  <Link key={item.title} href={item.url} className="text-md font-semibold">
+    {item.title}
+  </Link>
+);
 
 export { Navbar };

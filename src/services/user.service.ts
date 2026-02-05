@@ -8,7 +8,7 @@ export const userService = {
     try {
       const cookieStore = await cookies();
 
-     
+
 
       const res = await fetch(`${AUTH_URL}/get-session`, {
         headers: {
@@ -25,18 +25,20 @@ export const userService = {
       }
 
 
-      return { data:session, error: null };
+      return { data: session, error: null };
     } catch (err) {
       console.error(err);
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
-  
+
+
+
   getSessionWithRole: async function () {
     try {
       const cookieStore = await cookies();
 
-      console.log("browser cookie store get",cookieStore.toString());
+
 
       const res = await fetch(`${AUTH_URL}/get-session`, {
         headers: {
@@ -48,22 +50,31 @@ export const userService = {
 
       const session = await res.json();
 
-      if (session === null) {
+
+      if (session?.user === null) {
         return { data: null, error: { message: "Session is missing." } };
       }
 
-      const role:any= await fetch(`${AUTH_URL}/get-session`, {
+      
+
+      const role: any = await fetch(`${AUTH_URL}/me`, {
         headers: {
           Cookie: cookieStore.toString(),
         },
         cache: "no-store",
       });
 
-      if(role?.role){
-session.role= role?.role
+      const roleData = await role.json();
+
+      
+
+      if (roleData?.role) {
+        session.user.role = roleData?.role
       }
 
-      return { data:session, error: null };
+
+
+      return { data: session, error: null };
     } catch (err) {
       console.error(err);
       return { data: null, error: { message: "Something Went Wrong" } };

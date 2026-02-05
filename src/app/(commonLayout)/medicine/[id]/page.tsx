@@ -13,6 +13,8 @@ export default async function MedicineDetailsPage({
 }: MedicineDetailsProps) {
   const { id } = await params;
 
+ 
+
   const { data, error } = await medicineService.getMedicineById(id);
 
   if (error || !data) {

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import {
   Breadcrumb,
@@ -14,6 +16,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { userService } from "@/services/user.service";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
   children,
@@ -21,13 +24,18 @@ export default async function DashboardLayout({
   seller,
   admin,
 }: {
+  children: React.ReactNode;
   admin: React.ReactNode;
   user: React.ReactNode;
   seller: React.ReactNode;
-  children: React.ReactNode;
 }) {
   const { data } = await userService.getSessionWithRole();
-  const userData = data;
+  const userData = data?.user;
+  console.log("userData form  dashboard:",userData)
+
+  if (!userData?.role) {
+    redirect("/login");
+  }
 
   let roleContent: React.ReactNode;
 
@@ -42,7 +50,7 @@ export default async function DashboardLayout({
       roleContent = user;
       break;
     default:
-      roleContent = null;
+      redirect("/unauthorized");
   }
 
   return (

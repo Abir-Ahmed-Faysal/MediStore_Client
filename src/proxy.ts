@@ -5,15 +5,18 @@ import { userService } from "./services/user.service"
 import { Role } from "./constants/roles"
 
 export async function proxy(request: NextRequest) {
+    // console.log('this is form proxy start.....>');
 
-   const { pathname } = request.nextUrl
+    const { pathname } = request.nextUrl
 
-    const {data}= await userService.getSessionWithRole()
+    const { data } = await userService.getSessionWithRole()
+    // console.log('this is form proxy data.....>', data);
 
-    
-    const role = data?.role
 
-   
+
+    const role = data?.user?.role
+
+
 
     // not logged in
     if (!role) {
@@ -39,14 +42,15 @@ export async function proxy(request: NextRequest) {
     if (role !== Role.seller && pathname.startsWith("/seller-dashboard")) {
         return NextResponse.redirect(new URL("/dashboard", request.url))
     }
+    console.log('this is form proxy end.....>');
 
     return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/admin-dashboard/:path*",
-    "/seller-dashboard/:path*",
-  ],
+    matcher: [
+        "/dashboard/:path*",
+        "/admin-dashboard/:path*",
+        "/seller-dashboard/:path*",
+    ],
 }
