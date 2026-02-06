@@ -18,20 +18,21 @@ export interface CategoryRef {
   category_name: string;
 }
 
-export interface Medicine {
-  id: string;
-  title: string;
-  description: string;
-  manufacturer: string;
-  price: string;
-  stock: number;
-  sellerId: string;
-  categoryId: string;
+export interface MedicineResponse {
+id:string;
+image:string;
+title:string;
+description:string;
+manufacturer:string;
+isFeatured:boolean;
+price:string | number;
+stock:number |number;
+categoryId:string;
   categoryRef: CategoryRef;
 }
 
 export interface MedicineListResponse {
-  data: Medicine[];
+  data: MedicineResponse[];
   pagination: Pagination;
 }
 
@@ -114,7 +115,7 @@ export const medicineService = {
         throw new Error("Medicine not found");
       }
 
-      const json: ApiResponse<Medicine> = await res.json();
+      const json: ApiResponse<MedicineResponse> = await res.json();
 
       return { data: json.data, error: null };
     } catch (error) {
