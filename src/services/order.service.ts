@@ -86,6 +86,87 @@ export async function postOrder(payload: {
 
 
 export const orderService = {
+
+
+  getUserOrders: async (payload: {
+    params: SellerOrderServicesPayload;
+  }): Promise<{
+    data: SellerOrdersResponse | null;
+    error: { message: string } | null;
+  }> => {
+    try {
+      const { status, page } = payload.params;
+      const cookieStore = await cookies();
+
+      const url = new URL(`${API_URL}/orders/user`);
+
+      if (status) {
+        url.searchParams.append("status", status);
+      }
+
+      url.searchParams.append("page", page.toString());
+
+      const res = await fetch(url.toString(), {
+        headers: {
+          cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      console.log("this is data promise ==>", res, res.ok, cookieStore);
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Failed to fetch orders" },
+        };
+      }
+
+      const data: SellerOrdersResponse = await res.json();
+
+
+      return { data, error: null };
+    } catch (error) {
+      console.error(error);
+      return {
+        data: null,
+        error: { message: "Internal server error" },
+      };
+    }
+  },
+
+  getUserOrderDetails: async function (id: string) {
+
+    try {
+
+      const cookieStore = await cookies()
+
+      const res = await fetch(`${API_URL}/orders/user/${id}`,{
+        headers: {
+          cookie: cookieStore.toString()
+        },
+        cache: "no-store"
+      })
+
+      if (!res.ok) {
+        return { data: null, error: { message: "internal error" } }
+      }
+
+
+      const data = await res.json()
+
+
+      return { data, error: null }
+
+    } catch (error) {
+      console.log(error);
+      return { data: null, error: { message: "internal error" } }
+    }
+  },
+
+
+
+
   getSellerOrders: async (payload: {
     params: SellerOrderServicesPayload;
   }): Promise<{
@@ -133,55 +214,8 @@ export const orderService = {
     }
   },
 
-  getUserOrders: async (payload: {
-    params: SellerOrderServicesPayload;
-  }): Promise<{
-    data: SellerOrdersResponse | null;
-    error: { message: string } | null;
-  }> => {
-    try {
-      const { status, page } = payload.params;
-      const cookieStore = await cookies();
 
-      const url = new URL(`${API_URL}/orders/user`);
-
-      if (status) {
-        url.searchParams.append("status", status);
-      }
-
-      url.searchParams.append("page", page.toString());
-
-      const res = await fetch(url.toString(), {
-        headers: {
-          cookie: cookieStore.toString(),
-        },
-        cache: "no-store",
-      });
-
-      console.log("this is data promise ==>", res, res.ok, cookieStore);
-
-      if (!res.ok) {
-        return {
-          data: null,
-          error: { message: "Failed to fetch orders" },
-        };
-      }
-
-      const data: SellerOrdersResponse = await res.json();
-      console.log("this is data exist ==>", data, cookieStore);
-
-      return { data, error: null };
-    } catch (error) {
-      console.error(error);
-      return {
-        data: null,
-        error: { message: "Internal server error" },
-      };
-    }
-  },
-
-
-  getUserSellerOrderDetails: async (id: string) => {
+  getSellerOrderDetails: async (id: string) => {
     try {
       const url = new URL(`${API_URL}/orders/seller/${id}`);
 
@@ -220,5 +254,104 @@ export const orderService = {
       };
     }
   },
+
+
+
+
+
+
+
+
+  getAdminOrders: async (payload: {
+    params: SellerOrderServicesPayload;
+  }): Promise<{
+    data: SellerOrdersResponse | null;
+    error: { message: string } | null;
+  }> => {
+    try {
+      const { status, page } = payload.params;
+      const cookieStore = await cookies();
+
+      const url = new URL(`${API_URL}/orders/admin`);
+
+      if (status) {
+        url.searchParams.append("status", status);
+      }
+
+      url.searchParams.append("page", page.toString());
+
+      const res = await fetch(url.toString(), {
+        headers: {
+          cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      console.log("this is data promise ==>", res, res.ok, cookieStore);
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Failed to fetch orders" },
+        };
+      }
+
+      const data: SellerOrdersResponse = await res.json();
+      console.log("this is data exist ==>", data, cookieStore);
+
+      return { data, error: null };
+    } catch (error) {
+      console.error(error);
+      return {
+        data: null,
+        error: { message: "Internal server error" },
+      };
+    }
+  },
+
+  getAdminOrderDetails: async (id: string) => {
+    try {
+      const url = new URL(`${API_URL}/orders/admin/${id}`);
+
+      const cookieStore = await cookies()
+
+      const res = await fetch(url.toString(), {
+        headers: {
+          cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Failed to fetch order" },
+        };
+      }
+
+      const json = (await res.json()) as SingleApiResponse<Order>;
+
+
+      console.log('data form the the single seller orders details');
+
+      return {
+        data: json.data,
+        error: null,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        data: null,
+        error: { message: "Internal server error" },
+      };
+    }
+  },
+
+
+
+
+
+
+
 
 };
