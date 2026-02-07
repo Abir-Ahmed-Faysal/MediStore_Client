@@ -23,9 +23,12 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
     "DELIVERED",
   ];
 
-  const handleUpdateStatus = async () => {
+  const handleUpdateStatus = async (id: string, status: string) => {
     if (nextStatus === status) {
       toast.info("Status is already set to this value");
+
+
+      
       return;
     }
 
@@ -39,14 +42,13 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
   return (
     <>
       {/* Trigger */}
-<Badge
-  variant="outline"
-  onClick={() => setOpen(true)}
-  className="cursor-pointer px-3 py-1 text-sm hover:bg-muted"
->
-  {status}
-</Badge>
-
+      <Badge
+        variant="outline"
+        onClick={() => setOpen(true)}
+        className="cursor-pointer px-3 py-1 text-sm hover:bg-muted"
+      >
+        {status}
+      </Badge>
 
       {/* Modal */}
       {open && (
@@ -60,9 +62,7 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
           {/* Dialog */}
           <div className="relative z-10 w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
             {/* Header */}
-            <h2 className="text-lg font-semibold mb-4">
-              Change Order Status
-            </h2>
+            <h2 className="text-lg font-semibold mb-4">Change Order Status</h2>
 
             {/* Current status */}
             <div className="text-sm mb-4">
@@ -107,7 +107,7 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
               </button>
 
               <button
-                onClick={handleUpdateStatus}
+                onClick={() => handleUpdateStatus(id, status)}
                 className="rounded-md bg-primary px-4 py-2 text-sm text-white"
               >
                 Confirm Update
