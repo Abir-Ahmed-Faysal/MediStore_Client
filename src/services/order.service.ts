@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { Order, SingleApiResponse } from "@/types/sellerOrderDetails";
 import { SellerOrderServicesPayload } from "@/types/sellerOrderServicesPayload";
 import { cookies } from "next/headers";
 
@@ -9,7 +10,7 @@ export type OrderStatus =
   | "PROCESSING"
   | "SHIPPED"
   | "DELIVERED"
-  | "CANCELLED";
+  ;
 interface MedicineRef {
   id: string;
   title: string;
@@ -53,6 +54,12 @@ export interface SellerOrdersResponse {
     totalPage: number;
   };
 }
+
+
+
+
+
+
 
 
 export async function postOrder(payload: {
@@ -125,6 +132,7 @@ export const orderService = {
       };
     }
   },
+
   getUserOrders: async (payload: {
     params: SellerOrderServicesPayload;
   }): Promise<{
@@ -171,4 +179,46 @@ export const orderService = {
       };
     }
   },
+
+
+  getUserSellerOrderDetails: async (id: string) => {
+    try {
+      const url = new URL(`${API_URL}/orders/seller/${id}`);
+
+      const cookieStore = await cookies()
+
+      console.log("this is the url ", url.toString());
+
+      const res = await fetch(url.toString(), {
+        headers: {
+          cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Failed to fetch order" },
+        };
+      }
+
+      const json = (await res.json()) as SingleApiResponse<Order>;
+
+
+      console.log('data form the the single seller orders details');
+
+      return {
+        data: json.data,
+        error: null,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        data: null,
+        error: { message: "Internal server error" },
+      };
+    }
+  },
+
 };

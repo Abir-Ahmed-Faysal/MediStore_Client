@@ -12,6 +12,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination } from "@/services/medicine.service";
 import { UpdateOrderStatusDialogue } from "./updateStatusDialog";
+import { Eye } from "lucide-react";
 
 interface UserRef {
   id: string;
@@ -40,7 +41,7 @@ export interface OrdersTableProps {
   userId: string;
   address: string;
   totalAmount: string;
-  status: "PLACED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+  status: "PLACED" | "PROCESSING" | "SHIPPED" | "DELIVERED" ;
   createdAt: string;
   updatedAt: string;
   userRef: UserRef;
@@ -52,7 +53,6 @@ const ORDER_STATUS = [
   "PROCESSING",
   "SHIPPED",
   "DELIVERED",
-  "CANCELLED",
 ] as const;
 
 export default function SellerOrdersStatusTable({
@@ -82,9 +82,14 @@ export default function SellerOrdersStatusTable({
     router.push(`?${params.toString()}`);
   };
 
+  const showOrderDetails = (id:string) => {
+ router.push(`/seller-dashboard/orders/${id}`)
+
+
+  };
+
   return (
     <>
-      
       <div className="mb-4">
         <select
           defaultValue={searchParams.get("status") ?? ""}
@@ -118,11 +123,8 @@ export default function SellerOrdersStatusTable({
               <TableCell>{order.userRef?.name}</TableCell>
               <TableCell>{order.totalAmount}</TableCell>
               <TableCell>{order.status}</TableCell>
-              <TableCell className="text-right">
-                <UpdateOrderStatusDialogue
-                  id={order.id}
-                  status={order.status}
-                />
+              <TableCell className="text-right flex ">
+        <Eye className="w-5 h-5 text-muted-foreground" onClick={()=>showOrderDetails(order?.id)} />
               </TableCell>
             </TableRow>
           ))}
