@@ -27,7 +27,7 @@ export default function AdminUserShowTable({
 }) {
   const handleBan = async (id: string) => {
     try {
-      await userService.banUser(id);
+      // await userService.banUser(id);
       toast.success("User banned successfully");
     } catch (error) {
       toast.error("Failed to ban user");
@@ -36,7 +36,7 @@ export default function AdminUserShowTable({
 
   const handleUnban = async (id: string) => {
     try {
-      await userService.UnBanUser(id);
+      // await userService.UnBanUser(id);
       toast.success("User unbanned successfully");
     } catch (error) {
       toast.error("Failed to unban user");

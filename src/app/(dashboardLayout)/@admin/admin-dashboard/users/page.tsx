@@ -1,3 +1,4 @@
+import AdminUserShowTable from "@/components/modules/adminDashboard/adminUsershowTable";
 import { userService } from "@/services/user.service";
 import { notFound } from "next/navigation";
 
@@ -10,7 +11,7 @@ const UserManage = async () => {
   }
 
 
-  return <div>this is user manage page4</div>;
+  return <AdminUserShowTable data={data}/>
 };
 
 export default UserManage;

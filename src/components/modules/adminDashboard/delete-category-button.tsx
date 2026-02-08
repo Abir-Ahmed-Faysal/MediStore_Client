@@ -16,13 +16,12 @@ import { categoryServices } from "@/services/category.service";
 
 export function DeleteCategoryButton({ categoryId }: { categoryId: string }) {
   const handleDelete = async () => {
-    const { error } = await categoryServices.deleteCategory(categoryId);
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Category deleted successfully");
-    }
+    // const { error } = await categoryServices.deleteCategory(categoryId);
+    // if (error) {
+    //   toast.error(error.message);
+    // } else {
+    //   toast.success("Category deleted successfully");
+    // }
   };
 
   return (
@@ -42,9 +41,7 @@ export function DeleteCategoryButton({ categoryId }: { categoryId: string }) {
 
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>
-            Confirm
-          </AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>Confirm</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
