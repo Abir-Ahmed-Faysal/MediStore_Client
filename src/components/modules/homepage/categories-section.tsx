@@ -19,9 +19,13 @@ const defaultIcons: Record<string, string> = {
 
 export async function CategoriesSection() {
   try {
-    const { data } = await categoryServices.getCategories();
+    const { data,error } = await categoryServices.getCategories();
 
-    // 🔹 limit to 6
+    if(!data||error){
+      return {data:null, error:{message:"internal error"}}
+    }
+
+    
     const categories = data.slice(0, 6);
 
     return (

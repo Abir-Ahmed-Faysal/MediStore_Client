@@ -21,6 +21,7 @@ type PageProps = {
 export interface categories {
     id: string;
     category_name: string;
+    icon:string
 }
 
 const page = async ({ searchParams }: PageProps) => {

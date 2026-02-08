@@ -2,6 +2,7 @@ import { env } from "@/env";
 import { cookies } from "next/headers";
 
 const AUTH_URL = env.AUTH_URL;
+const API_URL = env.API_URL
 
 export const userService = {
   getSession: async function () {
@@ -32,8 +33,6 @@ export const userService = {
     }
   },
 
-
-
   getSessionWithRole: async function () {
     try {
       const cookieStore = await cookies();
@@ -55,7 +54,7 @@ export const userService = {
         return { data: null, error: { message: "Session is missing." } };
       }
 
-      
+
 
       const role: any = await fetch(`${AUTH_URL}/me`, {
         headers: {
@@ -66,7 +65,7 @@ export const userService = {
 
       const roleData = await role.json();
 
-      
+
 
       if (roleData?.role) {
         session.user.role = roleData?.role
@@ -80,4 +79,87 @@ export const userService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
+
+
+
+  getUsers: async function () {
+    try {
+      const cookieStore = await cookies()
+
+      const res = await fetch(`${API_URL}/admin/users`, {
+        headers: {
+          cookie: cookieStore.toString()
+        },
+        cache: "no-store"
+      })
+
+      if (!res.ok) {
+        return { data: null, error: { message: "invalid server response" } }
+      }
+
+      const json = await res.json()
+      return { data: json?.data, error: null }
+
+    } catch (error) {
+      console.log(error);
+      return { data: null, error: { message: "internal server error" } }
+    }
+  },
+
+
+
+  banUser: async function (id: string) {
+    try {
+      const cookieStore = await cookies()
+
+      const res = await fetch(`${API_URL}/admin/users/${id}/ban`, {
+        headers: {
+          cookie: cookieStore.toString()
+        },
+        cache: "no-store"
+      })
+
+      if (!res.ok) {
+        return { data: null, error: { message: "invalid server response" } }
+      }
+
+      const json = await res.json()
+
+
+      return { data: json, error: null }
+
+    } catch (error) {
+      console.log(error);
+      return { data: null, error: { message: "internal server error" } }
+    }
+  },
+
+
+  UnBanUser: async function (id: string) {
+    try {
+      const cookieStore = await cookies()
+
+      const res = await fetch(`${API_URL}/admin/users/${id}/unban`, {
+        headers: {
+          cookie: cookieStore.toString()
+        },
+        cache: "no-store"
+      })
+
+      if (!res.ok) {
+        return { data: null, error: { message: "invalid server response" } }
+      }
+
+      const json = await res.json()
+
+
+      return { data: json, error: null }
+
+    } catch (error) {
+      console.log(error);
+      return { data: null, error: { message: "internal server error" } }
+    }
+  }
+
+
 };
