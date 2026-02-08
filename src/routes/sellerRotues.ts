@@ -5,8 +5,16 @@ export const sellerRoute: Route[] = [
         title: "Product Management",
         items: [
             {
-                title: "Create Blog",
-                url: "/create-blog",
+                title: "Analytics",
+                url: "/seller-dashboard",
+            },
+            {
+                title: "Manage medicines",
+                url: "/seller-dashboard/medicine",
+            },
+            {
+                title: "Manage orders",
+                url: "/seller-dashboard/orders",
             },
         ],
     },

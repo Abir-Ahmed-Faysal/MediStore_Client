@@ -5,8 +5,16 @@ export const userRoutes: Route[] = [
     title: "My Dashboard",
     items: [
       {
-        title: "Create Blog",
-        url: "/create-blog",
+        title: "Profile",
+        url: "/dashboard",
+      },
+      {
+        title: "My cart",
+        url: "/dashboard/cart",
+      },
+      {
+        title: "My orders",
+        url: "/dashboard/my-order",
       },
     ],
   },
