@@ -9,17 +9,15 @@ export default async function CommonLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data } = await userService.getSession();
-
+  const { data } = await userService.getSessionWithRole();
+  const user = data?.user;
 
   return (
-    <div >
-      <Navbar  data={data}/>
-      <div className="min-h-[calc(100vh-136px)]">
-            {children}
-      </div>
-  
-      <Footer></Footer>
+    <div>
+      <Navbar data={user} />
+      <div className="md:min-h-[calc(100vh-136px)]">{children}</div>
+
+      <Footer data={user}></Footer>
     </div>
   );
 }

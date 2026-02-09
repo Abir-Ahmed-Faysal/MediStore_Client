@@ -48,7 +48,7 @@ const page = async ({ searchParams }: PageProps) => {
     categoryServices.getCategories(),
   ]);
 
-  const allCategory: categories []= categories?.data?.data || [];
+  const allCategory: categories []= categories?.data || [];
   const medicines: MedicineResponse[] = data?.data?.data || [];
   const pagination: Pagination = data?.data?.pagination || {
     total: 0,

@@ -24,7 +24,7 @@ export default async function OrderInvoice({ params }: PageProps) {
   if (!id) throw new Error("Order ID is required");
 
   const { data: order, error } =
-    await orderService.getUserSellerOrderDetails(id);
+    await orderService.getSellerOrderDetails(id);
 
   if (error || !order) notFound();
 

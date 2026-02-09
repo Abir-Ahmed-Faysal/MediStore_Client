@@ -1,19 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { Menu } from "lucide-react";
 import Link from "next/link";
-
+import { Menu, ShoppingCart, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-import { Accordion } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -21,150 +20,157 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import { ModeToggle } from "./ModeToggle";
-import { logout } from "@/actions/logoutAction";
-import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { Route } from "@/types";
+import { adminRoutes } from "@/routes/adminRoutes";
+import { sellerRoute } from "@/routes/sellerRotues";
+import { userRoutes } from "@/routes/userRoutes";
 
-interface MenuItem {
-  title: string;
-  url: string;
-  description?: string;
-  icon?: React.ReactNode;
-  items?: MenuItem[];
-}
-
-export type UserDataType = {
+interface NavbarProps {
   id: string;
   name: string;
   email: string;
-  role?: string;
-};
-
-interface Navbar1Props {
-  className?: string;
-  logo?: {
-    url: string;
-    src: string;
-    alt: string;
-    title: string;
-    className?: string;
-  };
-  menu?: MenuItem[];
-  auth?: {
-    cart: {
-      title: string;
-      url: string;
-    };
-    login: {
-      title: string;
-      url: string;
-    };
-    signup: {
-      title: string;
-      url: string;
-    };
-  };
-  data?: {
-    session: any;
-    user: UserDataType;
-  };
+  role: "ADMIN" | "SELLER" | "USER";
 }
 
-const Navbar = ({
-  data,
-  logo = {
-    url: "/",
-    src: "./images/MediStore.png",
-    alt: "logo",
-    title: "MediStore",
-  },
-  menu = [
-    { title: "Home", url: "/" },
-    { title: "Medicines", url: "/medicine" },
-    { title: "My order", url: "/orders" },
-    { title: "Dashboard", url: "/dashboard" },
-  ],
-  auth = {
-    cart: { title: "Cart", url: "/cart" },
-    login: { title: "Login", url: "/login" },
-    signup: { title: "Register", url: "/register" },
-  },
-  className,
-}: Navbar1Props) => {
-  const existUserData = data?.user?.email;
+/* ================= COMPONENT ================= */
 
-  const [userData, setUserData] = useState(existUserData);
+export const Navbar = ({ data }: { data: NavbarProps }) => {
+  const [userData, setUserData] = useState<NavbarProps | null>(data);
 
+  console.log(userData, "<...=== form the user");
+
+  /* -------- role based menu -------- */
+  let roleContent: Route[] = [];
+
+  switch (userData?.role) {
+    case "ADMIN":
+      roleContent = adminRoutes;
+      break;
+    case "SELLER":
+      roleContent = sellerRoute;
+      break;
+    case "USER":
+      roleContent = userRoutes;
+      break;
+    default:
+      roleContent = [];
+  }
+
+  /* -------- logout -------- */
   const handleLogout = async () => {
-    const logOut = await authClient.signOut();
-    if (logOut) {
-      toast.success("logout successful");
-      setUserData(undefined);
-      return;
-    }
-    if (!logout) {
-      toast.error("login failed");
+    try {
+      await authClient.signOut();
+      toast.success("Logout successful");
+      setUserData(null);
+    } catch (error) {
+      toast.success("Logout failed");
     }
   };
 
-  const deskTab = userData ? (
-    <div className="flex gap-2">
-      <Button asChild variant="outline" size="sm">
-        <Link href={auth.cart.url}>{auth.cart.title}</Link>
-      </Button>
-
-      <Button variant="outline" size="sm" onClick={handleLogout}>
-        Logout
-      </Button>
-    </div>
-  ) : (
-    <div className="flex gap-2">
-      <Button asChild variant="outline" size="sm">
-        <Link href={auth.login.url}>{auth.login.title}</Link>
-      </Button>
-      <Button asChild size="sm">
-        <Link href={auth.signup.url}>{auth.signup.title}</Link>
-      </Button>
-    </div>
-  );
-
   return (
-    <section className={cn(className)}>
-      <div className="container mx-auto px-4">
-        {/* Desktop */}
-        <nav className="hidden items-center justify-between lg:flex">
-          <div className="flex items-center gap-6">
-            <Link href={logo.url} className="flex items-center gap-2">
+    <>
+      <section className="border-b">
+        <div className="container mx-auto px-4">
+          {/* ================= DESKTOP ================= */}
+          <nav className="hidden lg:flex items-center justify-between gap-6 py-4">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2">
               <img
-                src={logo.src}
-                className="max-h-16 dark:invert"
-                alt={logo.alt}
+                src="/images/MediStore.png"
+                alt="MediStore"
+                className="h-10 dark:invert"
               />
             </Link>
 
-            <NavigationMenu>
-              <NavigationMenuList>
-                {menu.map((item) => renderMenuItem(item))}
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
+            {/* Search */}
+            <div className="flex flex-1 justify-center px-6">
+              <input
+                type="text"
+                placeholder="Search medicines..."
+                className="w-full max-w-xl rounded-md border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
 
-          <div className="flex gap-2">
-            <ModeToggle />
-            {deskTab}
-          </div>
-        </nav>
+            {/* Right actions */}
+            <div className="flex items-center gap-3">
+              <ModeToggle />
 
-        {/* Mobile */}
-        <div className="block lg:hidden">
-          <div className="flex items-center justify-between">
-            <Link href={logo.url}>
+              {!userData && (
+                <>
+                  <Button asChild variant="outline" size="sm">
+                    <Link href="/login">Login</Link>
+                  </Button>
+                </>
+              )}
+
+              {userData && (
+                <>
+                  {userData.role === "USER" && (
+                    <Button asChild variant="outline" size="icon">
+                      <Link href="/dashboard/cart">
+                        <ShoppingCart className="size-4" />
+                      </Link>
+                    </Button>
+                  )}
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <User className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuLabel>{userData.name}</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+
+                      {roleContent.map((route) => (
+                        <div key={route.title}>
+                          <DropdownMenuLabel className="text-xs text-muted-foreground">
+                            {route.title}
+                          </DropdownMenuLabel>
+
+                          {route.items.map((item) => (
+                            <DropdownMenuItem key={item.title} asChild>
+                              <Link href={item.url}>{item.title}</Link>
+                            </DropdownMenuItem>
+                          ))}
+
+                          <DropdownMenuSeparator />
+                        </div>
+                      ))}
+
+                      <DropdownMenuItem
+                        className="text-red-500 hover:text-red-600"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              )}
+            </div>
+          </nav>
+
+          {/* ================= MOBILE ================= */}
+          <div className="flex items-center justify-between py-3 lg:hidden">
+            <Link href="/">
               <img
-                src={logo.src}
-                className="max-h-8 dark:invert"
-                alt={logo.alt}
+                src="/images/MediStore.png"
+                className="h-8 dark:invert"
+                alt="logo"
               />
             </Link>
 
@@ -175,76 +181,69 @@ const Navbar = ({
                 </Button>
               </SheetTrigger>
 
-              <SheetContent className="overflow-y-auto">
+              <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>
-                    <Link href={logo.url}>
-                      <img
-                        src={logo.src}
-                        className="max-h-8 dark:invert"
-                        alt={logo.alt}
-                      />
-                    </Link>
-                  </SheetTitle>
+                  <SheetTitle>MediStore</SheetTitle>
                 </SheetHeader>
 
-                <div className="flex flex-col gap-6 p-4">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="flex flex-col gap-4"
-                  >
-                    {menu.map((item) => renderMobileMenuItem(item))}
-                  </Accordion>
+                <div className="mt-6 flex flex-col gap-4">
+                  <input
+                    placeholder="Search medicines..."
+                    className="rounded-md border px-4 py-2"
+                  />
 
-                  <div className="flex flex-col gap-3">
-                    {userData ? (
-                      <>
-                        <Button asChild variant="outline">
-                          <Link href={auth.cart.url}>{auth.cart.title}</Link>
-                        </Button>
-                        <Button variant="outline" onClick={handleLogout}>
-                          Logout
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button asChild variant="outline">
-                          <Link href={auth.login.url}>{auth.login.title}</Link>
-                        </Button>
-                        <Button asChild>
-                          <Link href={auth.signup.url}>
-                            {auth.signup.title}
-                          </Link>
-                        </Button>
-                      </>
-                    )}
-                  </div>
+                  {!userData && (
+                    <>
+                      <Button asChild variant="outline">
+                        <Link href="/login">Login</Link>
+                      </Button>
+                      <Button asChild>
+                        <Link href="/register">Register</Link>
+                      </Button>
+                    </>
+                  )}
+
+                  {userData && (
+                    <>
+                      {roleContent.flatMap((r) =>
+                        r.items.map((item) => (
+                          <Button key={item.title} asChild variant="ghost">
+                            <Link href={item.url}>{item.title}</Link>
+                          </Button>
+                        )),
+                      )}
+
+                      <Button variant="outline" onClick={handleLogout}>
+                        Logout
+                      </Button>
+                    </>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* ================= USER SECONDARY NAV ================= */}
+      {userData?.role === "USER" && (
+        <div className="border-b">
+          <div className="container mx-auto flex justify-center gap-8 py-3 text-sm font-medium">
+            <Link href="/" className="hover:text-primary">
+              Home
+            </Link>
+            <Link href="/medicine" className="hover:text-primary">
+              Medicines
+            </Link>
+            <Link href="/about" className="hover:text-primary">
+              About Us
+            </Link>
+            <Link href="/follow" className="hover:text-primary">
+              Follow Us
+            </Link>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
-
-const renderMenuItem = (item: MenuItem) => (
-  <NavigationMenuItem key={item.title}>
-    <NavigationMenuLink
-      asChild
-      className="group inline-flex h-10 items-center rounded-md px-4 py-2 text-sm font-medium hover:bg-muted"
-    >
-      <Link href={item.url}>{item.title}</Link>
-    </NavigationMenuLink>
-  </NavigationMenuItem>
-);
-
-const renderMobileMenuItem = (item: MenuItem) => (
-  <Link key={item.title} href={item.url} className="text-md font-semibold">
-    {item.title}
-  </Link>
-);
-
-export { Navbar };

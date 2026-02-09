@@ -8,20 +8,20 @@ import { useRouter } from "next/navigation";
 interface AddToCartProps {
   id: string;
   title: string;
-  price: string;
+  price: number;
   stock: number;
+  disabled: boolean;
 }
 
 interface CartItem {
   id: string;
   title: string;
-  price: string;
+  price: number;
   quantity: number;
 }
 
 export function AddToCart({ id, title, price, stock }: AddToCartProps) {
   const [quantity, setQuantity] = useState(1);
-
 
   const increase = () => {
     if (quantity < stock) {
@@ -35,9 +35,9 @@ export function AddToCart({ id, title, price, stock }: AddToCartProps) {
     }
   };
 
-  const handleAddToCart = () => {
-   
+  const convertedPrice = Number(price);
 
+  const handleAddToCart = () => {
     const stored = localStorage.getItem("cart");
     const cart: CartItem[] = stored ? JSON.parse(stored) : [];
 
@@ -49,7 +49,7 @@ export function AddToCart({ id, title, price, stock }: AddToCartProps) {
       cart.push({
         id,
         title,
-        price,
+        price: convertedPrice,
         quantity,
       });
     }

@@ -31,7 +31,8 @@ export default async function DashboardLayout({
 }) {
   const { data } = await userService.getSessionWithRole();
   const userData = data?.user;
-  console.log("userData form  dashboard:",userData)
+
+ 
 
   if (!userData?.role) {
     redirect("/login");
@@ -80,9 +81,7 @@ export default async function DashboardLayout({
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4  p-4 pt-0">
-          <div className="w-full  flex-1 overflow-auto">
-            {roleContent}
-          </div>
+          <div className="w-full  flex-1 overflow-auto">{roleContent}</div>
         </div>
       </SidebarInset>
     </SidebarProvider>

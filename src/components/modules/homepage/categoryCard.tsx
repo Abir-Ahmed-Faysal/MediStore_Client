@@ -1,31 +1,27 @@
-"use client";
-
-import { Card, CardContent } from "@/components/ui/cart";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-
 type CategoryCardProps = {
-  id: string;
   name: string;
-  icon?: string;
+  icon: string;
 };
 
-export function CategoryCard({ id, name, icon }: CategoryCardProps) {
-  const router = useRouter();
-
+export function CategoryCard({ name, icon }: CategoryCardProps) {
   return (
-    <Card className="transition hover:-translate-y-1 hover:shadow-lg">
-      <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
-        <span className="text-4xl">{icon ?? "📦"}</span>
-        <p className="font-medium">{name}</p>
+    <div className="flex items-center justify-between gap-4">
+      {/* content div */}
+      <div className="flex flex-col justify-between">
+        <h1 className="text-lg font-semibold">{name}</h1>
+        <h6 className="text-sm text-muted-foreground">
+          see this →
+        </h6>
+      </div>
 
-        <Button
-          size="sm"
-          onClick={() => router.push(`/medicines?category=${id}`)}
-        >
-          See medicines
-        </Button>
-      </CardContent>
-    </Card>
+      {/* image div */}
+      <div className="shrink-0">
+        <img
+          src={icon}
+          alt={name}
+          className="h-10 w-10 object-contain"
+        />
+      </div>
+    </div>
   );
 }

@@ -14,22 +14,28 @@ export interface Pagination {
 }
 
 export interface CategoryRef {
-  id: string;
   category_name: string;
 }
 
 export interface MedicineResponse {
-id:string;
-image:string;
-title:string;
-description:string;
-manufacturer:string;
-isFeatured:boolean;
-price:string | number;
-stock:number |number;
-categoryId:string;
+  id: string;
+  image: string;
+  title: string;
+  description: string;
+  manufacturer: string;
+  isFeatured: boolean;
+  price: number | string;
+  stock: number;
+  sellerId: string;
+  categoryId: string;
   categoryRef: CategoryRef;
 }
+
+
+
+
+
+
 
 export interface MedicineListResponse {
   data: MedicineResponse[];
@@ -93,7 +99,7 @@ export const medicineService = {
       }
 
       const json: ApiResponse<MedicineListResponse> = await res.json();
- 
+
 
       return { data: json.data, error: null };
     } catch (error) {

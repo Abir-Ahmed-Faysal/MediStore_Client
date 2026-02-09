@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { UserDataType } from "./Navbar";
 
-export function Footer() {
+export function Footer({data}:{data:UserDataType}) {
   return (
     <footer className="border-t bg-slate-50">
       <div className="container mx-auto px-6 py-16">

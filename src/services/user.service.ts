@@ -33,7 +33,10 @@ export const userService = {
     }
   },
 
+
+
   getSessionWithRole: async function () {
+     console.log("hit the get session =====...>");
     try {
       const cookieStore = await cookies();
 
@@ -71,6 +74,7 @@ export const userService = {
         session.user.role = roleData?.role
       }
 
+      console.log("thi i s role data",roleData.role,"this is session data",session ,"from the services");
 
 
       return { data: session, error: null };
