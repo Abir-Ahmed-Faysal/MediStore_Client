@@ -14,7 +14,7 @@ export async function MedicinesSection() {
     return (
       <section className="py-16">
         <div className="container mx-auto px-6">
-          <h2 className="mb-10 text-center text-xl lg:text-2xl">
+          <h2 className="mb-10  text-xl lg:text-2xl">
             Featured Medicines
           </h2>
           <p className="text-center text-muted-foreground">
@@ -30,7 +30,7 @@ export async function MedicinesSection() {
   return (
     <section className=" py-16">
       <div className="container mx-auto px-6">
-        <h2 className="mb-10 text-center text-xl lg:text-2xl">
+        <h2 className="mb-10  text-xl lg:text-2xl">
           Featured Medicines
         </h2>
 

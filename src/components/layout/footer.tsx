@@ -1,20 +1,24 @@
 import Link from "next/link";
-import { UserDataType } from "./Navbar";
 
-export function Footer({data}:{data:UserDataType}) {
+interface User {
+  id: string;
+  name: string;
+  role: "USER" | "SELLER" | "ADMIN";
+  email: string;
+}
+
+export function Footer({ data }: { data: User }) {
   return (
-    <footer className="border-t bg-slate-50">
+    <footer className="border-t bg-gray-300 ">
       <div className="container mx-auto px-6 py-16">
-        
         {/* Top Grid */}
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
-
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-xl font-bold">MediStore 💊</h3>
+            <img className="h-12" src={"/images/MediStore.png"}/>
             <p className="text-sm text-muted-foreground">
-              Your trusted online medicine shop. Buy genuine medicines
-              from verified sellers with confidence.
+              Your trusted online medicine shop. Buy genuine medicines from
+              verified sellers with confidence.
             </p>
           </div>
 
@@ -28,8 +32,8 @@ export function Footer({data}:{data:UserDataType}) {
                 </Link>
               </li>
               <li>
-                <Link href="/shop" className="hover:text-primary">
-                  Shop
+                <Link href="/medicine" className="hover:text-primary">
+                  Medicines
                 </Link>
               </li>
               <li>

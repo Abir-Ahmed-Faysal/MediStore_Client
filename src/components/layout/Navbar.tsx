@@ -2,16 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, ShoppingCart, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Menu, ShoppingCart, User, Search } from "lucide-react";
 import { toast } from "sonner";
 
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -35,6 +28,13 @@ import { Route } from "@/types";
 import { adminRoutes } from "@/routes/adminRoutes";
 import { sellerRoute } from "@/routes/sellerRotues";
 import { userRoutes } from "@/routes/userRoutes";
+import {
+  MedicineResponse,
+  medicineService,
+} from "@/services/medicine.service";
+import { MedicineDialog } from "./hompgaeMedicineDialouge";
+import { searchMedicine } from "@/actions/navbarMedicineAction";
+
 
 interface NavbarProps {
   id: string;
@@ -43,12 +43,39 @@ interface NavbarProps {
   role: "ADMIN" | "SELLER" | "USER";
 }
 
-/* ================= COMPONENT ================= */
-
 export const Navbar = ({ data }: { data: NavbarProps }) => {
   const [userData, setUserData] = useState<NavbarProps | null>(data);
+  const [medicine, setMedicine] = useState<MedicineResponse | null>(null);
+  const [open, setOpen] = useState(false);
 
-  console.log(userData, "<...=== form the user");
+  /* -------- search handler -------- */
+const handleSearchChange = async (
+  e: React.ChangeEvent<HTMLInputElement>
+) => {
+  const value = e.target.value.trim();
+
+  if (!value) {
+    setMedicine(null);
+    setOpen(false);
+    return;
+  }
+
+  try {
+    const res = await searchMedicine({ search: value });
+
+    if (res && res.data.length > 0) {
+      setMedicine(res.data[0]); 
+      setOpen(true);
+    } else {
+      setMedicine(null);
+      setOpen(false);
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to search medicine");
+  }
+};
+
 
   /* -------- role based menu -------- */
   let roleContent: Route[] = [];
@@ -63,8 +90,6 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
     case "USER":
       roleContent = userRoutes;
       break;
-    default:
-      roleContent = [];
   }
 
   /* -------- logout -------- */
@@ -73,8 +98,8 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
       await authClient.signOut();
       toast.success("Logout successful");
       setUserData(null);
-    } catch (error) {
-      toast.success("Logout failed");
+    } catch {
+      toast.error("Logout failed");
     }
   };
 
@@ -82,7 +107,6 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
     <>
       <section className="border-b">
         <div className="container mx-auto px-4">
-          {/* ================= DESKTOP ================= */}
           <nav className="hidden lg:flex items-center justify-between gap-6 py-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
@@ -94,12 +118,16 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
             </Link>
 
             {/* Search */}
-            <div className="flex flex-1 justify-center px-6">
+            <div className="flex flex-1 justify-center items-center px-6">
               <input
+                onChange={handleSearchChange}
                 type="text"
                 placeholder="Search medicines..."
-                className="w-full max-w-xl rounded-md border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full max-w-xl rounded-l-md border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
               />
+              <div className="bg-[rgb(90,191,36)]  rounded-r-md p-2">
+                <Search className="text-white  size-5" />
+              </div>
             </div>
 
             {/* Right actions */}
@@ -107,11 +135,9 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
               <ModeToggle />
 
               {!userData && (
-                <>
-                  <Button asChild variant="outline" size="sm">
-                    <Link href="/login">Login</Link>
-                  </Button>
-                </>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/login">Login</Link>
+                </Button>
               )}
 
               {userData && (
@@ -152,7 +178,7 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
                       ))}
 
                       <DropdownMenuItem
-                        className="text-red-500 hover:text-red-600"
+                        className="text-red-500"
                         onClick={handleLogout}
                       >
                         Logout
@@ -163,86 +189,17 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
               )}
             </div>
           </nav>
-
-          {/* ================= MOBILE ================= */}
-          <div className="flex items-center justify-between py-3 lg:hidden">
-            <Link href="/">
-              <img
-                src="/images/MediStore.png"
-                className="h-8 dark:invert"
-                alt="logo"
-              />
-            </Link>
-
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="size-4" />
-                </Button>
-              </SheetTrigger>
-
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>MediStore</SheetTitle>
-                </SheetHeader>
-
-                <div className="mt-6 flex flex-col gap-4">
-                  <input
-                    placeholder="Search medicines..."
-                    className="rounded-md border px-4 py-2"
-                  />
-
-                  {!userData && (
-                    <>
-                      <Button asChild variant="outline">
-                        <Link href="/login">Login</Link>
-                      </Button>
-                      <Button asChild>
-                        <Link href="/register">Register</Link>
-                      </Button>
-                    </>
-                  )}
-
-                  {userData && (
-                    <>
-                      {roleContent.flatMap((r) =>
-                        r.items.map((item) => (
-                          <Button key={item.title} asChild variant="ghost">
-                            <Link href={item.url}>{item.title}</Link>
-                          </Button>
-                        )),
-                      )}
-
-                      <Button variant="outline" onClick={handleLogout}>
-                        Logout
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+          
         </div>
       </section>
 
-      {/* ================= USER SECONDARY NAV ================= */}
-      {userData?.role === "USER" && (
-        <div className="border-b">
-          <div className="container mx-auto flex justify-center gap-8 py-3 text-sm font-medium">
-            <Link href="/" className="hover:text-primary">
-              Home
-            </Link>
-            <Link href="/medicine" className="hover:text-primary">
-              Medicines
-            </Link>
-            <Link href="/about" className="hover:text-primary">
-              About Us
-            </Link>
-            <Link href="/follow" className="hover:text-primary">
-              Follow Us
-            </Link>
-          </div>
-        </div>
+      {/* Medicine Dialog */}
+      {medicine && (
+        <MedicineDialog
+          open={open}
+          onOpenChange={setOpen}
+          data={medicine}
+        />
       )}
     </>
   );

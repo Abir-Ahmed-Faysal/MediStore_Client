@@ -13,24 +13,19 @@ const steps = [
     title: "Fast Delivery",
     icon: "🚚",
     description: "Track your order in real time",
-  },
-  {
-    title: "Review Products",
-    icon: "⭐",
-    description: "Share feedback after delivery",
-  },
+  }
 ];
 
 export function TrustAndProcessSection() {
   return (
-    <section className="py-20">
+    <section className="py-20 ">
       <div className="container mx-auto px-6">
 
-        <h2 className="mb-12 text-center text-3xl font-semibold">
+        <h2 className="mb-12  md: text-2xl ">
           How MediStore Works
         </h2>
 
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
           {steps.map((step) => (
             <div
               key={step.title}
