@@ -20,34 +20,73 @@ export default async function MedicineDetailsPage({
   const price = Number(data.price);
 
   return (
-    <section className="container mx-auto max-w-3xl px-6 py-12 space-y-6">
-      <h1 className="text-3xl font-semibold">{data.title}</h1>
-
-      <Badge variant="secondary">{data.categoryRef.category_name}</Badge>
-
-      <div className="flex items-center gap-6">
-        <p className="text-2xl font-bold">৳ {price}</p>
-
-        <p className={data.stock > 0 ? "text-green-600" : "text-red-500"}>
-          {data.stock > 0 ? `In stock (${data.stock})` : "Out of stock"}
-        </p>
-      </div>
-
-      <p className="text-muted-foreground">{data.description}</p>
-
-      <div className="text-sm space-y-1">
-        <p>
-          <strong>Manufacturer:</strong> {data.manufacturer}
-        </p>
-      </div>
-
-      <AddToCart
-        id={data.id}
-        title={data.title}
-        price={price}
-        stock={data.stock}
-        disabled={data.stock === 0}
+    <section className="container mx-auto max-w-5xl px-6 py-12">
+  <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+    {/* Image Section */}
+    <div className="rounded-xl border bg-muted p-4">
+      <img
+        src={data.image}
+        alt={data.title}
+        className="mx-auto h-[360px] w-full rounded-lg object-contain"
       />
-    </section>
+    </div>
+
+    {/* Details Section */}
+    <div className="flex flex-col gap-5">
+      {/* Category */}
+      <Badge className="w-fit bg-[#FF3F9A] text-white">
+        {data.categoryRef.category_name}
+      </Badge>
+
+      {/* Title */}
+      <h1 className="text-3xl font-semibold leading-tight">
+        {data.title}
+      </h1>
+
+      {/* Manufacturer */}
+      <p className="text-sm text-muted-foreground">
+        Manufactured by <span className="font-medium text-foreground">
+          {data.manufacturer}
+        </span>
+      </p>
+
+      {/* Price + Stock */}
+      <div className="flex flex-wrap items-center gap-6">
+        <p className="text-3xl font-bold text-primary">
+          ৳ {price}
+        </p>
+
+        <span
+          className={`rounded-md px-3 py-1 text-sm font-medium ${
+            data.stock > 0
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-600"
+          }`}
+        >
+          {data.stock > 0
+            ? `In Stock (${data.stock})`
+            : "Out of Stock"}
+        </span>
+      </div>
+
+      {/* Description */}
+      <p className="text-sm leading-relaxed text-muted-foreground">
+        {data.description}
+      </p>
+
+      {/* Action */}
+      <div className="pt-4">
+        <AddToCart
+          id={data.id}
+          title={data.title}
+          price={price}
+          stock={data.stock}
+          disabled={data.stock === 0}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
   );
 }

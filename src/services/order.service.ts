@@ -88,23 +88,14 @@ export async function postOrder(payload: {
 export const orderService = {
 
 
-  getUserOrders: async (payload: {
-    params: SellerOrderServicesPayload;
-  }): Promise<{
+  getUserOrders: async (): Promise<{
     data: SellerOrdersResponse | null;
     error: { message: string } | null;
   }> => {
     try {
-      const { status, page } = payload.params;
       const cookieStore = await cookies();
 
       const url = new URL(`${API_URL}/orders/user`);
-
-      if (status) {
-        url.searchParams.append("status", status);
-      }
-
-      url.searchParams.append("page", page.toString());
 
       const res = await fetch(url.toString(), {
         headers: {
@@ -113,8 +104,6 @@ export const orderService = {
         cache: "no-store",
       });
 
-      console.log("this is data promise ==>", res, res.ok, cookieStore);
-
       if (!res.ok) {
         return {
           data: null,
@@ -122,10 +111,10 @@ export const orderService = {
         };
       }
 
-      const data: SellerOrdersResponse = await res.json();
+      const json: SellerOrdersResponse = await res.json();
 
 
-      return { data, error: null };
+      return { data: json.data as any, error: null };
     } catch (error) {
       console.error(error);
       return {
@@ -135,13 +124,48 @@ export const orderService = {
     }
   },
 
+
+
+
+  updateUserOrderStatus: async function (id: string) {
+
+    try {
+
+      const cookieStore = await cookies()
+
+      const res = await fetch(`${API_URL}/orders/user/${id}/cancel`, {
+        method: "PATCH",
+        headers: {
+          cookie: cookieStore.toString()
+        },
+        cache: "no-store"
+      })
+
+      if (!res.ok) {
+        return { data: null, error: { message: "internal error" } }
+      }
+
+
+      const data = await res.json()
+
+
+      return { data, error: null }
+
+    } catch (error) {
+      console.log(error);
+      return { data: null, error: { message: "internal error" } }
+    }
+  },
+
+
+
   getUserOrderDetails: async function (id: string) {
 
     try {
 
       const cookieStore = await cookies()
 
-      const res = await fetch(`${API_URL}/orders/user/${id}`,{
+      const res = await fetch(`${API_URL}/orders/user/${id}`, {
         headers: {
           cookie: cookieStore.toString()
         },
@@ -214,7 +238,6 @@ export const orderService = {
     }
   },
 
-
   getSellerOrderDetails: async (id: string) => {
     try {
       const url = new URL(`${API_URL}/orders/seller/${id}`);
@@ -254,13 +277,6 @@ export const orderService = {
       };
     }
   },
-
-
-
-
-
-
-
 
   getAdminOrders: async (payload: {
     params: SellerOrderServicesPayload;
@@ -346,6 +362,42 @@ export const orderService = {
       };
     }
   },
+
+
+
+
+
+  updateSellerOrderStatus: async function (id: string, status: string) {
+
+    try {
+
+      const cookieStore = await cookies()
+
+      const res = await fetch(`${API_URL}/orders/seller/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(status),
+        headers: {
+          cookie: cookieStore.toString()
+        },
+        cache: "no-store"
+      })
+
+      if (!res.ok) {
+        return { data: null, error: { message: "internal error" } }
+      }
+
+
+      const data = await res.json()
+
+
+      return { data, error: null }
+
+    } catch (error) {
+      console.log(error);
+      return { data: null, error: { message: "internal error" } }
+    }
+  },
+
 
 
 

@@ -18,7 +18,7 @@ export interface Category {
 // create
 export interface CreateCategoryPayload {
   category_name: string;
-  icon?: string;
+  icon: string;
 }
 
 // update (PATCH → partial)

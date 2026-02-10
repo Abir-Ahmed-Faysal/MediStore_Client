@@ -44,8 +44,8 @@ export function AppSidebar({
   }
 
   return (
-    <Sidebar {...props}>
-      <SidebarContent>
+    <Sidebar  {...props}>
+      <SidebarContent className="bg-[rgb(90,191,36)]">
         {routes.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>

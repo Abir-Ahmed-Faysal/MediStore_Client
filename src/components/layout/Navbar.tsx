@@ -189,7 +189,35 @@ const handleSearchChange = async (
               )}
             </div>
           </nav>
-          
+          <div className="flex flex-wrap items-center justify-center gap-6 py-3 text-sm font-medium">
+            <Link
+              href="/"
+              className="hover:text-[rgb(90,191,36)] transition-colors"
+            >
+              Home
+            </Link>
+
+            <Link
+              href="/medicine"
+              className="hover:text-[rgb(90,191,36)] transition-colors"
+            >
+              Medicine
+            </Link>
+
+            <Link
+              href="/register"
+              className="hover:text-[rgb(90,191,36)] transition-colors"
+            >
+              Become a Seller
+            </Link>
+
+            <Link
+              href="/"
+              className="hover:text-[rgb(90,191,36)] transition-colors"
+            >
+              About Us
+            </Link>
+          </div>
         </div>
       </section>
 

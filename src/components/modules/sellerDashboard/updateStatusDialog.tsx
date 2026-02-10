@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { OrderStatus as APIOrderStatus } from "@/types/sellerOrderDetails";
+import { updateSellerOderStatus } from "@/actions/updateSellerOrderStatus";
 
 interface Props {
   id: string;
@@ -26,17 +27,18 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
   const handleUpdateStatus = async (id: string, status: string) => {
     if (nextStatus === status) {
       toast.info("Status is already set to this value");
-
-
-      
       return;
     }
 
-    // await orderService.updateOrderStatus(id, nextStatus)
-
-    toast.success(`Order status updated to ${nextStatus}`);
-    setOpen(false);
-    router.refresh();
+    try {
+      await updateSellerOderStatus(id, status);
+      toast.success(`Order status updated to ${nextStatus}`);
+      setOpen(false);
+      setNextStatus(status as any);
+    } catch (error) {
+      toast.error("failed to update order status");
+      setOpen(false);
+    }
   };
 
   return (

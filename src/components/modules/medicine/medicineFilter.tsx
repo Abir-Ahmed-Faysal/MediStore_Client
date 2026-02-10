@@ -78,15 +78,8 @@ export default function MedicineFilters() {
       />
 
       <div className="flex gap-2 md:col-span-5">
-        <Button type="submit">Apply filters</Button>
+        <Button className="hover:bg-[rgb(90,191,36)]  bg-[rgb(90,191,36)]" type="submit">search</Button>
 
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.push("/medicine")}
-        >
-          Reset
-        </Button>
       </div>
     </form>
   );

@@ -10,6 +10,7 @@ export const revalidate = 10;
 type PageProps = {
   searchParams: Promise<{
     search?: string;
+    image?:string;
     category?: string;
     manufacturer?: string;
     minPrice?: string;
@@ -49,7 +50,7 @@ export default async function MedicinesPage({ searchParams }: PageProps) {
 
   return (
     <section className="container mx-auto px-6 py-12">
-      <h1 className="mb-6 text-3xl font-semibold">All Medicines</h1>
+      <h1 className="mb-6 text-xl md:text-2xl font-semibold">All Medicines</h1>
 
       {/* 🔍 Filters */}
       <MedicineFilters />
@@ -57,29 +58,52 @@ export default async function MedicinesPage({ searchParams }: PageProps) {
       {/* 🧾 Medicine Grid */}
       <div className="mt-8 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {data.data.map((medicine) => (
-          <Card key={medicine.id} className="transition hover:shadow-lg">
-            <CardContent className="flex h-full flex-col gap-3 p-4">
-              <h3 className="line-clamp-2 font-medium">{medicine.title}</h3>
+          <Card
+  key={medicine.id}
+  className="group overflow-hidden rounded-xl border bg-background transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+>
+  {/* Image */}
+  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+    <img
+      src={medicine.image}
+      alt={medicine.title}
+      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+    />
+  </div>
 
-              <p className="text-sm text-muted-foreground">
-                {medicine.categoryRef.category_name}
-              </p>
+  <CardContent className="flex h-full flex-col gap-2 p-4">
+    {/* Category */}
+    <span className="w-fit rounded-md bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+      {medicine.categoryRef.category_name}
+    </span>
 
-              <p className="text-sm text-muted-foreground">
-                {medicine.manufacturer}
-              </p>
+    {/* Title */}
+    <h3 className="line-clamp-2 text-sm font-semibold leading-snug">
+      {medicine.title}
+    </h3>
 
-              <p className="mt-auto font-semibold text-primary">
-                ৳ {medicine.price}
-              </p>
+    {/* Manufacturer */}
+    <p className="text-xs text-muted-foreground">
+      By {medicine.manufacturer}
+    </p>
 
-              <Link href={`/medicine/${medicine.id}`}>
-                <Button size="sm" className="mt-2 w-full">
-                  View details
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+    {/* Price */}
+    <p className="mt-auto text-lg font-bold text-primary">
+      ৳ {medicine.price}
+    </p>
+
+    {/* Action */}
+    <Link href={`/medicine/${medicine.id}`} className="mt-2">
+      <Button
+        size="sm"
+        className="w-full bg-[rgb(90,191,36)] font-medium hover:bg-[rgb(76,170,30)]"
+      >
+        View Details
+      </Button>
+    </Link>
+  </CardContent>
+</Card>
+
         ))}
       </div>
 

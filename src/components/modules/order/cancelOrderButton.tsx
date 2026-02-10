@@ -1,5 +1,6 @@
 "use client";
 
+import { updateUserOrderStatus } from "@/actions/updateUserOrderStatus";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -11,16 +12,20 @@ type Props = {
 export function CancelOrderButton({ orderId, status }: Props) {
   const handleCancel = async () => {
     if (status !== "PLACED") {
-      toast.error(`Current status "${status}" cannot be cancelled. Only PLACED orders can be cancelled.`,
+      toast.error(
+        `Current status "${status}" cannot be cancelled. Only PLACED orders can be cancelled.`,
       );
       return;
     }
 
-    console.log("CANCEL ORDER ID:", orderId);
-    //server action api call to cancel order
+  
 
-    // এখানে future এ API call যাবে
-    // await cancelOrder(orderId)
+    try {
+      await updateUserOrderStatus(orderId)
+      toast.success("order cancelled");
+    } catch (error) {
+      toast.error("order cancel failed");
+    }
   };
 
   return (

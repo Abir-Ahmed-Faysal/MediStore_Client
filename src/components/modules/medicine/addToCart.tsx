@@ -87,7 +87,7 @@ export function AddToCart({ id, title, price, stock }: AddToCartProps) {
       <Button
         onClick={handleAddToCart}
         disabled={stock === 0}
-        className="w-full"
+        className="w-full hover:bg-[rgb(90,191,36)]  bg-[rgb(90,191,36)]"
       >
         Add to cart
       </Button>

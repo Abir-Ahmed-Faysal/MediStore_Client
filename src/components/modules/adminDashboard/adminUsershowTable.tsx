@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { userService } from "@/services/user.service";
+import { userAction } from "@/actions/userAdminAction";
 
 interface User {
   id: string;
@@ -20,14 +21,10 @@ interface User {
   banned: boolean;
 }
 
-export default function AdminUserShowTable({
-  data,
-}: {
-  data: User[];
-}) {
+export default function AdminUserShowTable({ data }: { data: User[] }) {
   const handleBan = async (id: string) => {
     try {
-      // await userService.banUser(id);
+      await userAction.banUser(id);
       toast.success("User banned successfully");
     } catch (error) {
       toast.error("Failed to ban user");
@@ -36,7 +33,7 @@ export default function AdminUserShowTable({
 
   const handleUnban = async (id: string) => {
     try {
-      // await userService.UnBanUser(id);
+      await userAction.unBan(id);
       toast.success("User unbanned successfully");
     } catch (error) {
       toast.error("Failed to unban user");

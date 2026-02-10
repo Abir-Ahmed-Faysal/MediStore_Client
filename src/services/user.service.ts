@@ -4,6 +4,17 @@ import { cookies } from "next/headers";
 const AUTH_URL = env.AUTH_URL;
 const API_URL = env.API_URL
 
+
+export type UpdateUserPayload = {
+  name?: string;
+  image?: string;
+  phone?: string;
+  address?: string;
+};
+
+
+
+
 export const userService = {
   getSession: async function () {
     try {
@@ -36,7 +47,7 @@ export const userService = {
 
 
   getSessionWithRole: async function () {
-     console.log("hit the get session =====...>");
+    console.log("hit the get session =====...>");
     try {
       const cookieStore = await cookies();
 
@@ -74,7 +85,7 @@ export const userService = {
         session.user.role = roleData?.role
       }
 
-      console.log("thi i s role data",roleData.role,"this is session data",session ,"from the services");
+      console.log("thi i s role data", roleData.role, "this is session data", session, "from the services");
 
 
       return { data: session, error: null };
@@ -130,7 +141,7 @@ export const userService = {
       const json = await res.json()
 
 
-      return { data: json, error: null }
+      return { data: json.data, error: null }
 
     } catch (error) {
       console.log(error);
@@ -162,6 +173,40 @@ export const userService = {
     } catch (error) {
       console.log(error);
       return { data: null, error: { message: "internal server error" } }
+    }
+  },
+
+  updateUserData: async function (
+    payload: UpdateUserPayload
+  ) {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${API_URL}/user/update-user`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(payload),
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Invalid server response" },
+        };
+      }
+      const json = await res.json();
+
+      return { data: json, error: null };
+    } catch (error) {
+      console.error(error);
+      return {
+        data: null,
+        error: { message: "Internal server error" },
+      };
     }
   }
 

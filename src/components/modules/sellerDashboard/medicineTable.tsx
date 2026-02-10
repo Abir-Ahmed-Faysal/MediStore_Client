@@ -35,23 +35,22 @@ export default function MedicineTable({
     router.push(`?${params.toString()}`);
   };
 
-const goToPage = (page: number) => {
-  params.set("page", page.toString());
-  router.push(`?${params.toString()}`);
-};
+  const goToPage = (page: number) => {
+    params.set("page", page.toString());
+    router.push(`?${params.toString()}`);
+  };
 
-const prevHandler = () => {
-  if (pagination.page > 1) {
-    goToPage(pagination.page - 1);
-  }
-};
+  const prevHandler = () => {
+    if (pagination.page > 1) {
+      goToPage(pagination.page - 1);
+    }
+  };
 
-const nextHandler = () => {
-  if (pagination.page < pagination.totalPage) {
-    goToPage(pagination.page + 1);
-  }
-};
-
+  const nextHandler = () => {
+    if (pagination.page < pagination.totalPage) {
+      goToPage(pagination.page + 1);
+    }
+  };
 
   return (
     <>
@@ -89,7 +88,7 @@ const nextHandler = () => {
               <TableCell>{medicine?.stock}</TableCell>
               <TableCell>{medicine?.price}</TableCell>
               <TableCell className="text-right flex items-center justify-end gap-2">
-                <UpdateMedicine medicine={medicine}  ></UpdateMedicine>
+                <UpdateMedicine medicine={medicine}></UpdateMedicine>
                 <AlertDialogDestructive id={medicine.id} />
               </TableCell>
             </TableRow>
@@ -98,40 +97,35 @@ const nextHandler = () => {
 
         <TableFooter>
           <TableRow>
-<TableCell colSpan={7} className="text-center">
-  <div className="flex items-center justify-center gap-6">
-    
-    <span className="text-sm text-muted-foreground">
-      Showing page {pagination.page} of {pagination.totalPage}
-    </span>
+            <TableCell colSpan={7} className="text-center">
+              <div className="flex items-center justify-center gap-6">
+                <span className="text-sm text-muted-foreground">
+                  Showing page {pagination.page} of {pagination.totalPage}
+                </span>
 
-    <div className="flex items-center gap-2">
-      <button
-        onClick={prevHandler}
-        disabled={pagination.page === 1}
-        aria-label="Previous page"
-        className="px-3 py-1 border rounded disabled:opacity-50"
-      >
-        ←
-      </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={prevHandler}
+                    disabled={pagination.page === 1}
+                    aria-label="Previous page"
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                  >
+                    ←
+                  </button>
 
-      <span className="min-w-8 text-center">
-        {pagination.page}
-      </span>
+                  <span className="min-w-8 text-center">{pagination.page}</span>
 
-      <button
-        onClick={nextHandler}
-        disabled={pagination.page === pagination.totalPage}
-        aria-label="Next page"
-        className="px-3 py-1 border rounded disabled:opacity-50"
-      >
-        →
-      </button>
-    </div>
-
-  </div>
-</TableCell>
-
+                  <button
+                    onClick={nextHandler}
+                    disabled={pagination.page === pagination.totalPage}
+                    aria-label="Next page"
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                  >
+                    →
+                  </button>
+                </div>
+              </div>
+            </TableCell>
           </TableRow>
         </TableFooter>
       </Table>

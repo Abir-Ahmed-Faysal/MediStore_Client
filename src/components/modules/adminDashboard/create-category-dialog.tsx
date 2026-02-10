@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
+import { categoryAction } from "@/actions/categoryAction";
+import { toast } from "sonner";
 
 // -------------------- TYPES --------------------
 type Category = {
@@ -37,8 +39,15 @@ export function AddNewCategory() {
       onSubmit: medicineSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log("FINAL SUBMIT VALUE 👉", value);
-      // TODO: Call your API to create a new category
+      try {
+        console.log("here is the new value with object making");
+        await categoryAction.AddNewCategory(value);
+        toast.success("new Category successfully ");
+        form.reset();
+      } catch (error) {
+        toast.error("new Category successfully ");
+        form.reset();
+      }
     },
   });
 
