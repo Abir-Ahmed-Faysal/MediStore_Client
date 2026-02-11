@@ -13,6 +13,7 @@ import { DeleteCategoryButton } from "./delete-category-button";
 import { EditCategory } from "./edit-category-dialog";
 
 export default function CategoryShowingTable({ data }: { data: Category[] }) {
+   {console.log(data,"form the table data image check ");}
   return (
     <Table>
       <TableHeader>
@@ -28,7 +29,9 @@ export default function CategoryShowingTable({ data }: { data: Category[] }) {
         {data.map((category) => (
           <TableRow key={category.id}>
             <TableCell>
+              
               {category.icon ? (
+               
                 <img
                   src={category.icon}
                   alt={category.category_name}

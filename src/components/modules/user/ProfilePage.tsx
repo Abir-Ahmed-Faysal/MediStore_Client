@@ -49,12 +49,13 @@ export default function ProfileComponent({ user }: ProfileComponentProps) {
 
     try {
       const { data } = await updateUser(payload);
-      toast.error("profile updated successfully");
+      console.log(data, "<===here is the data");
+      toast.success("profile updated successfully", data);
       setForm(data?.data);
-      return
+      return;
     } catch (error) {
       toast.error("failed to update user data");
-      return
+      return;
     }
   };
 

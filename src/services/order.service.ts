@@ -2,6 +2,7 @@ import { env } from "@/env";
 import { Order, SingleApiResponse } from "@/types/sellerOrderDetails";
 import { SellerOrderServicesPayload } from "@/types/sellerOrderServicesPayload";
 import { cookies } from "next/headers";
+import { stringify } from "querystring";
 
 const API_URL = env.API_URL;
 
@@ -216,7 +217,7 @@ export const orderService = {
         cache: "no-store",
       });
 
-      console.log("this is data promise ==>", res, res.ok, cookieStore);
+      
 
       if (!res.ok) {
         return {
@@ -226,7 +227,7 @@ export const orderService = {
       }
 
       const data: SellerOrdersResponse = await res.json();
-      console.log("this is data exist ==>", data, cookieStore);
+
 
       return { data, error: null };
     } catch (error) {
@@ -237,6 +238,8 @@ export const orderService = {
       };
     }
   },
+
+
 
   getSellerOrderDetails: async (id: string) => {
     try {
@@ -285,6 +288,7 @@ export const orderService = {
     error: { message: string } | null;
   }> => {
     try {
+      console.log("hit the get admin orders route");
       const { status, page } = payload.params;
       const cookieStore = await cookies();
 
@@ -367,36 +371,44 @@ export const orderService = {
 
 
 
-  updateSellerOrderStatus: async function (id: string, status: string) {
 
-    try {
 
-      const cookieStore = await cookies()
+updateSellerOrderStatus: async function (
+  id: string,
+  status: string
+) {
+  try {
+    const cookieStore = await cookies();
 
-      const res = await fetch(`${API_URL}/orders/seller/${id}`, {
-        method: "PATCH",
-        body: JSON.stringify(status),
-        headers: {
-          cookie: cookieStore.toString()
+    const res = await fetch(`${API_URL}/orders/seller/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        cookie: cookieStore.toString(),
+      },
+      body: JSON.stringify({ status }),
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        data: null,
+        error: {
+          message: errorData?.message || "Failed to update order status",
         },
-        cache: "no-store"
-      })
-
-      if (!res.ok) {
-        return { data: null, error: { message: "internal error" } }
-      }
-
-
-      const data = await res.json()
-
-
-      return { data, error: null }
-
-    } catch (error) {
-      console.log(error);
-      return { data: null, error: { message: "internal error" } }
+      };
     }
-  },
+
+    const data = await res.json();
+    return { data, error: null };
+
+  } catch (error) {
+    console.error(error);
+    return { data: null, error: { message: "internal error" } };
+  }
+},
+
 
 
 

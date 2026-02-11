@@ -10,8 +10,8 @@ import {
   TableFooter,
 } from "@/components/ui/table";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AlertDialogBasic } from "./addMedicineDialauge";
-import { AlertDialogDestructive } from "./deleteMedineDialauge";
+import { AddNewMedicine } from "./addMedicineDialauge";
+import { DeleteMedicine } from "./deleteMedineDialauge";
 import { MedicineResponse, Pagination } from "@/services/medicine.service";
 import { categories } from "@/app/(dashboardLayout)/@seller/seller-dashboard/medicine/page";
 import { UpdateMedicine } from "./updateMedicine";
@@ -25,6 +25,7 @@ export default function MedicineTable({
   medicines: MedicineResponse[];
   pagination: Pagination;
 }) {
+  
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -60,7 +61,7 @@ export default function MedicineTable({
           onChange={(e) => handleSearch(e.target.value)}
           className="border px-3 py-2 rounded w-64"
         />
-        <AlertDialogBasic categories={categories} />
+        <AddNewMedicine categories={categories} />
       </div>
 
       <Table>
@@ -88,8 +89,8 @@ export default function MedicineTable({
               <TableCell>{medicine?.stock}</TableCell>
               <TableCell>{medicine?.price}</TableCell>
               <TableCell className="text-right flex items-center justify-end gap-2">
-                <UpdateMedicine medicine={medicine}></UpdateMedicine>
-                <AlertDialogDestructive id={medicine.id} />
+                <UpdateMedicine categories={categories} medicine={medicine}></UpdateMedicine>
+                <DeleteMedicine id={medicine.id} />
               </TableCell>
             </TableRow>
           ))}

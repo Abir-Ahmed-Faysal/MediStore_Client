@@ -12,7 +12,10 @@ import {
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { toast } from "sonner";
-import { categoryAction } from "@/actions/categoryAction";
+import { updateNewCategoryAction } from "@/actions/categoryAction";
+import { useState } from "react";
+import { Edit } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // -------------------- TYPES --------------------
 type Category = {
@@ -30,6 +33,8 @@ const medicineSchema = z.object({
 });
 
 export function EditCategory({ category }: { category?: Category }) {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       category_name: category?.category_name || "",
@@ -40,25 +45,28 @@ export function EditCategory({ category }: { category?: Category }) {
     },
     onSubmit: async ({ value }) => {
       try {
-        await categoryAction.updateNewCategory(category?.id as string, value);
+        const { data, error } = await updateNewCategoryAction(
+          category?.id as string,
+          value,
+        );
+        if (!data) {
+          toast.error("Category updated  failed ");
+          return;
+        }
         toast.success("Category updated successfully ");
-        form.reset();
+        router.refresh();
+        setOpen(false);
       } catch (error) {
         toast.error("Category updated  failed ");
-        form.reset();
       }
     },
   });
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button
-          onClick={() => {
-            form.reset(); // Reset to default values each time dialog opens
-          }}
-        >
-          Edit Category
+        <Button variant={"outline"} className="" onClick={() => {}}>
+          <Edit size={16} />
         </Button>
       </AlertDialogTrigger>
 

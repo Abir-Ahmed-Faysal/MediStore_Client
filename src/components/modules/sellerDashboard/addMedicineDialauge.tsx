@@ -12,6 +12,10 @@ import {
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import Select from "react-select";
+import { addNewMedicineAction } from "@/actions/MedicineAction";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 // -------------------- TYPES --------------------
 type Category = {
@@ -30,11 +34,9 @@ const medicineSchema = z.object({
   image: z.string().min(5, "Image URL is required"),
 });
 
-export function AlertDialogBasic({
-  categories,
-}: {
-  categories?: Category[];
-}) {
+export function AddNewMedicine({ categories }: { categories?: Category[] }) {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       title: "",
@@ -49,7 +51,21 @@ export function AlertDialogBasic({
       onSubmit: medicineSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log("FINAL SUBMIT VALUE 👉", value);
+      try {
+        console.log("this is from the value", value);
+        const { data, error } = await addNewMedicineAction(value as any);
+        if (!data) {
+          toast.error("Failed to add new medicine duplicate medicine");
+          return;
+        }
+        toast.success("New medicine Added");
+        setOpen(false)
+        form.reset()
+        router.refresh();
+      } catch (error) {
+        console.log(error);
+        toast.error("failed to add new medicine");
+      }
     },
   });
 
@@ -60,9 +76,11 @@ export function AlertDialogBasic({
     })) ?? [];
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button
+          variant={"outline"}
+          className=""
           onClick={() => {
             form.reset();
           }}
@@ -93,16 +111,15 @@ export function AlertDialogBasic({
               return (
                 <div>
                   <label className="text-sm font-medium">Title</label>
-                  <input placeholder="Ex: Napa Extra 500mg"
+                  <input
+                    placeholder="Ex: Napa Extra 500mg"
                     className="border p-2 w-full rounded-md"
                     value={f.state.value}
                     onChange={(e) => f.handleChange(e.target.value)}
                     onBlur={f.handleBlur}
                   />
                   {showError && error && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {error.message}
-                    </p>
+                    <p className="text-sm text-red-500 mt-1">{error.message}</p>
                   )}
                 </div>
               );
@@ -119,16 +136,15 @@ export function AlertDialogBasic({
               return (
                 <div>
                   <label className="text-sm font-medium">Manufacturer</label>
-                  <input placeholder="Ex: square pharmaceuticals"
+                  <input
+                    placeholder="Ex: square pharmaceuticals"
                     className="border p-2 w-full rounded-md"
                     value={f.state.value}
                     onChange={(e) => f.handleChange(e.target.value)}
                     onBlur={f.handleBlur}
                   />
                   {showError && error && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {error.message}
-                    </p>
+                    <p className="text-sm text-red-500 mt-1">{error.message}</p>
                   )}
                 </div>
               );
@@ -156,9 +172,7 @@ export function AlertDialogBasic({
                     onBlur={f.handleBlur}
                   />
                   {showError && error && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {error.message}
-                    </p>
+                    <p className="text-sm text-red-500 mt-1">{error.message}</p>
                   )}
                 </div>
               );
@@ -186,9 +200,7 @@ export function AlertDialogBasic({
                     onBlur={f.handleBlur}
                   />
                   {showError && error && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {error.message}
-                    </p>
+                    <p className="text-sm text-red-500 mt-1">{error.message}</p>
                   )}
                 </div>
               );
@@ -203,9 +215,8 @@ export function AlertDialogBasic({
               const error = f.state.meta.errors?.[0];
 
               const selectedValue =
-                categoryOptions.find(
-                  (opt) => opt.value === f.state.value
-                ) ?? null;
+                categoryOptions.find((opt) => opt.value === f.state.value) ??
+                null;
 
               return (
                 <div>
@@ -220,9 +231,7 @@ export function AlertDialogBasic({
                     placeholder="Select category"
                   />
                   {showError && error && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {error.message}
-                    </p>
+                    <p className="text-sm text-red-500 mt-1">{error.message}</p>
                   )}
                 </div>
               );
@@ -239,16 +248,15 @@ export function AlertDialogBasic({
               return (
                 <div>
                   <label className="text-sm font-medium">Image URL</label>
-                  <input placeholder="Ex: http://www.example.com/image.jpg"
+                  <input
+                    placeholder="Ex: http://www.example.com/image.jpg"
                     className="border p-2 w-full rounded-md"
                     value={f.state.value}
                     onChange={(e) => f.handleChange(e.target.value)}
                     onBlur={f.handleBlur}
                   />
                   {showError && error && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {error.message}
-                    </p>
+                    <p className="text-sm text-red-500 mt-1">{error.message}</p>
                   )}
                 </div>
               );
@@ -265,16 +273,15 @@ export function AlertDialogBasic({
               return (
                 <div className="md:col-span-2">
                   <label className="text-sm font-medium">Description</label>
-                  <textarea placeholder="Ex: Napa Extra is a pain relief medicine used to treat headaches, muscle aches, and other minor pains...."
+                  <textarea
+                    placeholder="Ex: Napa Extra is a pain relief medicine used to treat headaches, muscle aches, and other minor pains...."
                     className="border p-2 w-full rounded-md min-h-[100px]"
                     value={f.state.value}
                     onChange={(e) => f.handleChange(e.target.value)}
                     onBlur={f.handleBlur}
                   />
                   {showError && error && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {error.message}
-                    </p>
+                    <p className="text-sm text-red-500 mt-1">{error.message}</p>
                   )}
                 </div>
               );
@@ -290,7 +297,9 @@ export function AlertDialogBasic({
             >
               Cancel
             </AlertDialogCancel>
-            <Button type="submit">Create</Button>
+            <Button className=" " type="submit">
+              + Create
+            </Button>
           </div>
         </form>
       </AlertDialogContent>

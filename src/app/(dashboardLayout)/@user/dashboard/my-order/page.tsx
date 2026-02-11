@@ -1,17 +1,15 @@
-
 import OrdersList from "@/components/modules/user/OrderList";
 import { orderService } from "@/services/order.service";
+import { notFound } from "next/navigation";
 
 export default async function OrdersPage() {
-  const { data: orders, error } = await orderService.getUserOrders();
+  const { data, error } = await orderService.getUserOrders();
 
-  if (!orders || error) {
-    return (
-      <div className="text-center pt-20 text-gray-500">
-        <p className="text-lg">No orders found.</p>
-      </div>
-    );
+  if (!data || error) {
+    notFound()
   }
+
+  const orders = data?.data || [];
 
   return <OrdersList orders={orders as any} />;
 }

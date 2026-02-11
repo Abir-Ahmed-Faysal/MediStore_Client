@@ -31,7 +31,7 @@ export const categoryServices = {
     payload: CreateCategoryPayload
   ): Promise<ServiceResult<Category>> {
     try {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
 
       const res = await fetch(`${API_URL}/admin/categories`, {
         method: "POST",
@@ -60,7 +60,7 @@ export const categoryServices = {
     payload: UpdateCategoryPayload
   ): Promise<ServiceResult<Category>> {
     try {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
 
       const res = await fetch(`${API_URL}/admin/categories/${id}`, {
         method: "PATCH",
@@ -86,7 +86,7 @@ export const categoryServices = {
   /* -------- DELETE category (Admin) -------- */
   async deleteCategory(id: string): Promise<ServiceResult<null>> {
     try {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
 
       const res = await fetch(`${API_URL}/admin/categories/${id}`, {
         method: "DELETE",
@@ -94,12 +94,17 @@ export const categoryServices = {
           cookie: cookieStore.toString(),
         },
       });
+      console.log("here is hte json data res", res);
 
       if (!res.ok) {
         return { data: null, error: { message: "Failed to delete category" } };
       }
 
-      return { data: null, error: null };
+      const json = await res.json()
+
+      console.log("here is hte json data", json);
+
+      return { data: json.data, error: null };
     } catch (error) {
       console.error("deleteCategory:", error);
       return { data: null, error: { message: "Internal server error" } };

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   AlertDialog,
@@ -10,25 +10,30 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { Trash2Icon } from "lucide-react"
-import { medicineService } from "@/services/medicine.service"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { deleteMedicineAction } from "@/actions/MedicineAction";
 
-export function AlertDialogDestructive({ id }: { id: string }) {
-  const router = useRouter()
+export function DeleteMedicine({ id }: { id: string }) {
+  const router = useRouter();
 
-  const handleDelete = async () => {
-    // const res = await medicineService.deleteMedicine(id)
-    // if (res) {
-    //   toast.success("Medicine deleted")
-    //   router.refresh()
-    // } else {
-    //   toast.error("Failed to delete medicine")
-    // }
-  }
+  const handleDelete = async (id: string) => {
+    try {
+      const { data, error } = await deleteMedicineAction(id);
+      if (!data) {
+        toast.error("Failed to delete medicine");
+        return;
+      }
+
+      toast.success("Medicine deleted");
+      router.refresh();
+    } catch (error) {
+      toast.error("Failed to delete medicine");
+    }
+  };
 
   return (
     <AlertDialog>
@@ -49,7 +54,7 @@ export function AlertDialogDestructive({ id }: { id: string }) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={() => handleDelete(id)}
             variant="destructive"
           >
             Delete
@@ -57,5 +62,5 @@ export function AlertDialogDestructive({ id }: { id: string }) {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

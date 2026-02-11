@@ -41,29 +41,21 @@ export interface OrdersTableProps {
   userId: string;
   address: string;
   totalAmount: string;
-  status: "PLACED" | "PROCESSING" | "SHIPPED" | "DELIVERED" ;
+  status: "PLACED" | "PROCESSING" | "SHIPPED" | "DELIVERED";
   createdAt: string;
   updatedAt: string;
   userRef: UserRef;
   orderItems: OrderItems[];
 }
 
-const ORDER_STATUS = [
-  "PLACED",
-  "PROCESSING",
-  "SHIPPED",
-  "DELIVERED",
-] as const;
+const ORDER_STATUS = ["PLACED", "PROCESSING", "SHIPPED", "DELIVERED"] as const;
 
 const statusColorMap: Record<string, string> = {
-  PLACED: "bg-gray-100 text-gray-700",
-  PROCESSING: "bg-blue-100 text-blue-700",
-  SHIPPED: "bg-yellow-100 text-yellow-700",
+  PLACED: "bg-blue-100 text-blue-700",
+  PROCESSING: "bg-yellow-100 text-yellow-700",
+  SHIPPED: "bg-purple-100 text-purple-700",
   DELIVERED: "bg-green-100 text-green-700",
 };
-
-
-
 
 export default function SellerOrdersStatusTable({
   orders,
@@ -72,6 +64,8 @@ export default function SellerOrdersStatusTable({
   orders: OrdersTableProps[];
   pagination: Pagination;
 }) {
+  console.log("hit here");
+  console.log("the data is from the table ", orders, pagination);
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams.toString());
@@ -92,10 +86,8 @@ export default function SellerOrdersStatusTable({
     router.push(`?${params.toString()}`);
   };
 
-  const showOrderDetails = (id:string) => {
- router.push(`/seller-dashboard/orders/${id}`)
-
-
+  const showOrderDetails = (id: string) => {
+    router.push(`/seller-dashboard/orders/${id}`);
   };
 
   return (
@@ -133,18 +125,20 @@ export default function SellerOrdersStatusTable({
               <TableCell>{order.userRef?.name}</TableCell>
               <TableCell>{order.totalAmount}</TableCell>
               <TableCell>
-  <span
-    className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-      statusColorMap[order.status] ??
-      "bg-gray-100 text-gray-700"
-    }`}
-  >
-    {order.status}
-  </span>
-</TableCell>
+                <span
+                  className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
+                    statusColorMap[order.status] ?? "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {order.status}
+                </span>
+              </TableCell>
 
               <TableCell className=" ">
-        <Eye className="w-5 h-5 text-muted-foreground" onClick={()=>showOrderDetails(order?.id)} />
+                <Eye
+                  className="w-5 h-5 text-muted-foreground"
+                  onClick={() => showOrderDetails(order?.id)}
+                />
               </TableCell>
             </TableRow>
           ))}

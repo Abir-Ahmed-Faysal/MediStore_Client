@@ -7,13 +7,10 @@ interface OrderStatusPageProps {
 }
 
 const OrderStatus = async ({ searchParams }: OrderStatusPageProps) => {
-
   const params = (await searchParams) || {};
 
-  
   const page = Number(params.page || 1);
   const status = params.status || "";
-
 
   const { data, error } = await orderService.getAdminOrders({
     params: { page, status } as SellerOrderServicesPayload,
@@ -21,10 +18,20 @@ const OrderStatus = async ({ searchParams }: OrderStatusPageProps) => {
 
   if (error) {
     return (
-      <div className="text-red-500 text-center py-4">
-        {error.message}
-      </div>
+      <div className="text-red-500 text-center py-4">Internal server Error</div>
     );
+  }
+
+  console.log(data, "form the orders data find");
+
+  if (!data) {
+    return (
+      <div className="text-red-500 text-center py-4">Data load failed</div>
+    );
+  }
+
+  if (data?.data.length === 0) {
+    return <div className="text-red-500 text-center py-4">No order found</div>;
   }
 
   return (

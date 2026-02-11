@@ -24,14 +24,15 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
     "DELIVERED",
   ];
 
-  const handleUpdateStatus = async (id: string, status: string) => {
+  const handleUpdateStatus = async (id: string, nextStatus: string) => {
     if (nextStatus === status) {
       toast.info("Status is already set to this value");
       return;
     }
 
     try {
-      await updateSellerOderStatus(id, status);
+      const { data } = await updateSellerOderStatus(id, nextStatus);
+      console.log(data, "here is the data value");
       toast.success(`Order status updated to ${nextStatus}`);
       setOpen(false);
       setNextStatus(status as any);
@@ -41,13 +42,30 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
     }
   };
 
+  let color = "";
+
+  switch (nextStatus) {
+    case "PLACED":
+      color = "text-blue-500";
+      break;
+    case "PROCESSING":
+      color = "text-yellow-500";
+      break;
+    case "SHIPPED":
+      color = "text-purple-500";
+      break;
+    case "DELIVERED":
+      color = "text-green-500";
+      break;
+  }
+
   return (
     <>
       {/* Trigger */}
       <Badge
         variant="outline"
         onClick={() => setOpen(true)}
-        className="cursor-pointer px-3 py-1 text-sm hover:bg-muted"
+        className={`cursor-pointer ${color} px-3 py-1 text-sm hover:bg-muted`}
       >
         {status}
       </Badge>
@@ -69,7 +87,7 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
             {/* Current status */}
             <div className="text-sm mb-4">
               Current status:
-              <Badge variant="outline" className="ml-2">
+              <Badge variant="outline" className={`ml-2 ${color} `}>
                 {status}
               </Badge>
             </div>
@@ -109,7 +127,7 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
               </button>
 
               <button
-                onClick={() => handleUpdateStatus(id, status)}
+                onClick={() => handleUpdateStatus(id, nextStatus)}
                 className="rounded-md bg-primary px-4 py-2 text-sm text-white"
               >
                 Confirm Update

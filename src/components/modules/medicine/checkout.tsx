@@ -70,14 +70,18 @@ export function Cart() {
     if (!data) {
       toast.success("order create successfully");
     }
-    
+
     if (data) {
       toast.success("order create successfully");
     }
   };
 
   if (cart.length === 0) {
-    return <p className="text-center">Your cart is empty</p>;
+    return (
+      <div className="text-center pt-20 lg:pt-32 text-gray-500">
+        <p className="text-lg">Your cart is Empty.</p>
+      </div>
+    );
   }
 
   return (

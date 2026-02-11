@@ -14,7 +14,10 @@ import { z } from "zod";
 import Select from "react-select";
 import { MedicineResponse } from "@/services/medicine.service";
 import { Edit } from "lucide-react";
-
+import { updateMedicineAction } from "@/actions/MedicineAction";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 // -------------------- TYPES --------------------
 type Category = {
@@ -34,17 +37,20 @@ const medicineSchema = z.object({
 });
 
 export function UpdateMedicine({
-  categories,medicine
+  categories,
+  medicine,
 }: {
   categories?: Category[];
-  medicine:MedicineResponse;
+  medicine: MedicineResponse;
 }) {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const form = useForm({
     defaultValues: {
-      title:medicine.title,
+      title: medicine.title,
       manufacturer: medicine.manufacturer,
-      price: medicine.price as unknown as number,
+      price: Number(medicine.price),
       stock: medicine.stock,
       description: medicine.description,
       categoryId: medicine.categoryId,
@@ -54,7 +60,24 @@ export function UpdateMedicine({
       onSubmit: medicineSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log("FINAL SUBMIT VALUE 👉", value);
+      try {
+        const { data, error } = await updateMedicineAction(
+          medicine.id,
+          value
+        );
+
+        if (!data || error) {
+          toast.error("medicine data failed updated");
+          return;
+        }
+
+        toast.success("medicine data update successfully");
+
+        setOpen(false);   // close dialog after success
+        router.refresh(); // refresh server data
+      } catch (error) {
+        toast.error("medicine data failed updated");
+      }
     },
   });
 
@@ -65,14 +88,16 @@ export function UpdateMedicine({
     })) ?? [];
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size={"sm"}
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => {
             form.reset();
           }}
         >
-          <Edit size={2} className="h-2 w-2" />
+          <Edit className="h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
 
@@ -88,7 +113,7 @@ export function UpdateMedicine({
           }}
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
-          {/* -------------------- TITLE -------------------- */}
+          {/* TITLE */}
           <form.Field name="title">
             {(f) => {
               const showError =
@@ -98,7 +123,7 @@ export function UpdateMedicine({
               return (
                 <div>
                   <label className="text-sm font-medium">Title</label>
-                  <input placeholder="Ex: Napa Extra 500mg"
+                  <input
                     className="border p-2 w-full rounded-md"
                     value={f.state.value}
                     onChange={(e) => f.handleChange(e.target.value)}
@@ -114,7 +139,7 @@ export function UpdateMedicine({
             }}
           </form.Field>
 
-          {/* -------------------- MANUFACTURER -------------------- */}
+          {/* MANUFACTURER */}
           <form.Field name="manufacturer">
             {(f) => {
               const showError =
@@ -123,8 +148,10 @@ export function UpdateMedicine({
 
               return (
                 <div>
-                  <label className="text-sm font-medium">Manufacturer</label>
-                  <input placeholder="Ex: square pharmaceuticals"
+                  <label className="text-sm font-medium">
+                    Manufacturer
+                  </label>
+                  <input
                     className="border p-2 w-full rounded-md"
                     value={f.state.value}
                     onChange={(e) => f.handleChange(e.target.value)}
@@ -140,7 +167,7 @@ export function UpdateMedicine({
             }}
           </form.Field>
 
-          {/* -------------------- PRICE -------------------- */}
+          {/* PRICE */}
           <form.Field name="price">
             {(f) => {
               const showError =
@@ -154,10 +181,13 @@ export function UpdateMedicine({
                     type="number"
                     className="border p-2 w-full rounded-md"
                     value={f.state.value ?? ""}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      f.handleChange(v === "" ? 0 : Number(v));
-                    }}
+                    onChange={(e) =>
+                      f.handleChange(
+                        e.target.value === ""
+                          ? 0
+                          : Number(e.target.value)
+                      )
+                    }
                     onBlur={f.handleBlur}
                   />
                   {showError && error && (
@@ -170,7 +200,7 @@ export function UpdateMedicine({
             }}
           </form.Field>
 
-          {/* -------------------- STOCK -------------------- */}
+          {/* STOCK */}
           <form.Field name="stock">
             {(f) => {
               const showError =
@@ -184,10 +214,13 @@ export function UpdateMedicine({
                     type="number"
                     className="border p-2 w-full rounded-md"
                     value={f.state.value ?? ""}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      f.handleChange(v === "" ? 0 : Number(v));
-                    }}
+                    onChange={(e) =>
+                      f.handleChange(
+                        e.target.value === ""
+                          ? 0
+                          : Number(e.target.value)
+                      )
+                    }
                     onBlur={f.handleBlur}
                   />
                   {showError && error && (
@@ -200,7 +233,7 @@ export function UpdateMedicine({
             }}
           </form.Field>
 
-          {/* -------------------- CATEGORY -------------------- */}
+          {/* CATEGORY */}
           <form.Field name="categoryId">
             {(f) => {
               const showError =
@@ -214,7 +247,9 @@ export function UpdateMedicine({
 
               return (
                 <div>
-                  <label className="text-sm font-medium">Category</label>
+                  <label className="text-sm font-medium">
+                    Category
+                  </label>
                   <Select
                     options={categoryOptions}
                     value={selectedValue}
@@ -222,7 +257,6 @@ export function UpdateMedicine({
                       f.handleChange(option ? option.value : "")
                     }
                     onBlur={f.handleBlur}
-                    placeholder="Select category"
                   />
                   {showError && error && (
                     <p className="text-sm text-red-500 mt-1">
@@ -234,7 +268,7 @@ export function UpdateMedicine({
             }}
           </form.Field>
 
-          {/* -------------------- IMAGE -------------------- */}
+          {/* IMAGE */}
           <form.Field name="image">
             {(f) => {
               const showError =
@@ -243,8 +277,10 @@ export function UpdateMedicine({
 
               return (
                 <div>
-                  <label className="text-sm font-medium">Image URL</label>
-                  <input placeholder="Ex: http://www.example.com/image.jpg"
+                  <label className="text-sm font-medium">
+                    Image URL
+                  </label>
+                  <input
                     className="border p-2 w-full rounded-md"
                     value={f.state.value}
                     onChange={(e) => f.handleChange(e.target.value)}
@@ -260,7 +296,7 @@ export function UpdateMedicine({
             }}
           </form.Field>
 
-          {/* -------------------- DESCRIPTION -------------------- */}
+          {/* DESCRIPTION */}
           <form.Field name="description">
             {(f) => {
               const showError =
@@ -269,11 +305,15 @@ export function UpdateMedicine({
 
               return (
                 <div className="md:col-span-2">
-                  <label className="text-sm font-medium">Description</label>
-                  <textarea placeholder="Ex: Napa Extra is a pain relief medicine used to treat headaches, muscle aches, and other minor pains...."
+                  <label className="text-sm font-medium">
+                    Description
+                  </label>
+                  <textarea
                     className="border p-2 w-full rounded-md min-h-[100px]"
                     value={f.state.value}
-                    onChange={(e) => f.handleChange(e.target.value)}
+                    onChange={(e) =>
+                      f.handleChange(e.target.value)
+                    }
                     onBlur={f.handleBlur}
                   />
                   {showError && error && (
@@ -286,16 +326,17 @@ export function UpdateMedicine({
             }}
           </form.Field>
 
-          {/* -------------------- FOOTER -------------------- */}
+          {/* FOOTER */}
           <div className="md:col-span-2 flex justify-end gap-2 pt-2">
             <AlertDialogCancel
-              onClick={() => {
-                form.reset();
-              }}
+              onClick={() => form.reset()}
             >
               Cancel
             </AlertDialogCancel>
-            <Button type="submit">Create</Button>
+
+            <Button type="submit">
+              Update
+            </Button>
           </div>
         </form>
       </AlertDialogContent>

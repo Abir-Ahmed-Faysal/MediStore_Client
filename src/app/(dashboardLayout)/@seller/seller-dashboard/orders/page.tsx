@@ -1,39 +1,41 @@
 import SellerOrdersStatusTable from "@/components/modules/sellerDashboard/sellerOrdersTable";
 import { orderService } from "@/services/order.service";
 import { SellerOrderServicesPayload } from "@/types/sellerOrderServicesPayload";
+import { notFound } from "next/navigation";
 
 interface OrderStatusPageProps {
   searchParams: Promise<{ page?: string; status?: string }>;
 }
 
 const OrderStatus = async ({ searchParams }: OrderStatusPageProps) => {
-
   const params = (await searchParams) || {};
 
-  
   const page = Number(params.page || 1);
   const status = params.status || "";
-
 
   const { data, error } = await orderService.getSellerOrders({
     params: { page, status } as SellerOrderServicesPayload,
   });
 
-  if (error) {
+  if (!data || error) {
+    notFound();
+  }
+
+  const orders = data?.data || [];
+
+  if (orders.length === 0) {
     return (
-      <div className="text-red-500 text-center py-4">
-        {error.message}
+      <div className="text-center pt-20 text-gray-500">
+        <p className="text-lg">No orders found.</p>
       </div>
     );
   }
 
+  console.log("this is fomr the ui redner ", orders);
   return (
     <div className="p-4">
-  
-
-    
       <SellerOrdersStatusTable
-        orders={data?.data || []}
+        orders={orders}
         pagination={
           data?.meta || { page: 1, limit: 10, total: 0, totalPage: 1 }
         }

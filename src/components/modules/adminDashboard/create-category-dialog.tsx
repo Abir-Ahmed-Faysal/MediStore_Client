@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { categoryAction } from "@/actions/categoryAction";
 import { toast } from "sonner";
+import { AddNewCategoryAction } from "@/actions/categoryAction";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // -------------------- TYPES --------------------
 type Category = {
@@ -30,6 +32,9 @@ const medicineSchema = z.object({
 });
 
 export function AddNewCategory() {
+
+  const router= useRouter()
+  const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
       category_name: "",
@@ -41,18 +46,24 @@ export function AddNewCategory() {
     onSubmit: async ({ value }) => {
       try {
         console.log("here is the new value with object making");
-        await categoryAction.AddNewCategory(value);
+        const { data, error } = await AddNewCategoryAction(value);
+        if (!data) {
+          toast.error("Failed to create a new category");
+          return;
+        }
+        router.refresh()
         toast.success("new Category successfully ");
+        setOpen(false);
         form.reset();
       } catch (error) {
-        toast.error("new Category successfully ");
+        toast.error("Failed to create a new category");
         form.reset();
       }
     },
   });
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button
           onClick={() => {

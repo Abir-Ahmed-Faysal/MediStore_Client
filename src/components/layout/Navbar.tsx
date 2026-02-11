@@ -6,13 +6,7 @@ import { Menu, ShoppingCart, User, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -136,7 +130,7 @@ const handleSearchChange = async (
 
               {!userData && (
                 <Button asChild variant="outline" size="sm">
-                  <Link href="/login">Login</Link>
+                  <Link href="/login">Login/Register</Link>
                 </Button>
               )}
 

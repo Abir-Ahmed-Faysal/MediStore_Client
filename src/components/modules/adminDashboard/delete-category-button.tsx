@@ -12,23 +12,32 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { categoryServices } from "@/services/category.service";
+import { useRouter } from "next/navigation";
+import { deleteCategoryAction } from "@/actions/categoryAction";
+import { Trash2 } from "lucide-react";
 
 export function DeleteCategoryButton({ categoryId }: { categoryId: string }) {
+  const router = useRouter();
   const handleDelete = async () => {
-    // const { error } = await categoryServices.deleteCategory(categoryId);
-    // if (error) {
-    //   toast.error(error.message);
-    // } else {
-    //   toast.success("Category deleted successfully");
-    // }
+    try {
+      const { data, error } = await deleteCategoryAction(categoryId);
+      if (!data) {
+        toast.error("failed to delete category");
+        return;
+      }
+
+      router.refresh();
+      toast.success("Category deleted successfully");
+    } catch (error) {
+      toast.error("failed to delete category");
+    }
   };
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button size="sm" variant="destructive">
-          Delete
+        <Button size="sm" variant="outline">
+        <Trash2 color="red" size={20} />
         </Button>
       </AlertDialogTrigger>
 

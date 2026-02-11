@@ -1,6 +1,7 @@
 import { env } from "@/env";
+import { cookies } from "next/headers";
 
-const API_URL = env.API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 /* ==============================
    Types
@@ -29,6 +30,11 @@ export interface MedicineResponse {
   sellerId: string;
   categoryId: string;
   categoryRef: CategoryRef;
+  reviews?: {
+    id: string,
+    content: string,
+
+  }
 }
 
 
@@ -64,18 +70,30 @@ export interface GetMedicinesParams {
   skip?: number;
 }
 
+
+export interface CreateMedicinePayload {
+  image: string;
+  title: string;
+  description: string;
+  manufacturer: string;
+  price: number
+  stock: number | string;
+  categoryId: string;
+}
+
+
 /* ==============================
    Service
 ================================ */
 
 export const medicineService = {
 
-  async getAllMedicines(
+  getAllMedicines: async (
     params?: GetMedicinesParams,
     options?: ServiceOptions,
-  ) {
+  )=> {
     try {
-      const url = new URL(`http://localhost:5000/api/medicines`);
+      const url = new URL(`${API_URL}/medicines`);
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -111,9 +129,9 @@ export const medicineService = {
   },
 
 
-  async getMedicineById(id: string) {
+  getMedicineById: async (id: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/medicines/${id}`, {
+      const res = await fetch(`${API_URL}/medicines/${id}`, {
         cache: "no-store",
       });
 
@@ -131,4 +149,111 @@ export const medicineService = {
       };
     }
   },
+
+
+  addNewMedicine: async (payload: CreateMedicinePayload) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${API_URL}/seller/medicines`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(payload),
+        cache: "no-store",
+      });
+console.log("hit the res",res);
+      if (!res.ok) {
+        const error = await res.json();
+        return {
+          data: null,
+          error: { message: error?.message ?? "Server error" },
+        };
+      }
+
+
+      const json: ApiResponse<MedicineResponse> = await res.json();
+console.log("hit the res",json);
+      return { data: json.data, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: { message: (error as Error).message },
+      };
+    }
+  },
+
+
+
+
+
+
+  updateMedicine: async (id: string, payload:Partial< CreateMedicinePayload>) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${API_URL}/seller/medicines/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(payload),
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        return {
+          data: null,
+          error: { message: error?.message ?? "Server error" },
+        };
+      }
+
+      const json: ApiResponse<MedicineResponse> = await res.json();
+
+      return { data: json.data, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: { message: (error as Error).message },
+      };
+    }
+  },
+
+  
+  deleteMedicine: async (id: string,) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${API_URL}/seller/medicines/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        return {
+          data: null,
+          error: { message: error?.message ?? "Server error" },
+        };
+      }
+
+      const json: ApiResponse<MedicineResponse> = await res.json();
+
+      return { data: json.data, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: { message: (error as Error).message },
+      };
+    }
+  }
+
 };

@@ -98,7 +98,7 @@ const SellerStatics: React.FC<Props> = ({ data, error }) => {
 
       {/* ================= Top Stats ================= */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Total Medicines" value={data.totalMedicine} />
+        <StatCard  title="Total Medicines" value={data.totalMedicine} />
         <StatCard title="Total Stock" value={data.totalStock} />
         <StatCard title="Pending Orders" value={data.pendingOrder} />
         <StatCard title="Delivered Orders" value={data.deliveredOrder} />
@@ -177,8 +177,8 @@ export default SellerStatics;
 ======================= */
 const StatCard = ({ title, value }: { title: string; value: number }) => {
   return (
-    <div className="rounded-xl border bg-white p-5 shadow-sm">
-      <p className="text-sm text-gray-500">{title}</p>
+    <div className="rounded-xl text- border bg-white p-5 shadow-sm">
+      <p className="text-sm font-semibold text-gray-500">{title}</p>
       <p className="mt-1 text-2xl font-semibold text-gray-900">{value}</p>
     </div>
   );
