@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-import { userService } from "./services/user.service"
-import { Role } from "./constants/roles"
+import { userService } from "./src/services/user.service"
+import { Role } from "./src/constants/roles"
 
 export async function proxy(request: NextRequest) {
-    // console.log('this is form proxy start.....>');
+    
 
     const { pathname } = request.nextUrl
 
     const { data } = await userService.getSessionWithRole()
-    // console.log('this is form proxy data.....>', data);
+    
 
 
 
@@ -18,7 +18,7 @@ export async function proxy(request: NextRequest) {
 
 
 
-    // not logged in
+   
     if (!role) {
         return NextResponse.redirect(new URL("/login", request.url))
     }
@@ -42,7 +42,7 @@ export async function proxy(request: NextRequest) {
     if (role !== Role.seller && pathname.startsWith("/seller-dashboard")) {
         return NextResponse.redirect(new URL("/dashboard", request.url))
     }
-    console.log('this is form proxy end.....>');
+   
 
     return NextResponse.next()
 }

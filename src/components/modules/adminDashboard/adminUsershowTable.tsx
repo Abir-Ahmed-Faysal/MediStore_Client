@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { userService } from "@/services/user.service";
-import { userAction } from "@/actions/userAdminAction";
+import { banUserAction, unBanAction } from "@/actions/userAdminAction";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: string;
@@ -22,9 +22,15 @@ interface User {
 }
 
 export default function AdminUserShowTable({ data }: { data: User[] }) {
+  const router = useRouter();
   const handleBan = async (id: string) => {
     try {
-      await userAction.banUser(id);
+      const { data, error } = await banUserAction(id);
+      if (!data) {
+        toast.error("User banned failed");
+        return;
+      }
+      router.refresh();
       toast.success("User banned successfully");
     } catch (error) {
       toast.error("Failed to ban user");
@@ -33,7 +39,11 @@ export default function AdminUserShowTable({ data }: { data: User[] }) {
 
   const handleUnban = async (id: string) => {
     try {
-      await userAction.unBan(id);
+      const { data, error } = await unBanAction(id);
+      if (!data) {
+        toast.error("User unbanned failed");
+      }
+      router.refresh();
       toast.success("User unbanned successfully");
     } catch (error) {
       toast.error("Failed to unban user");

@@ -8,7 +8,16 @@ import { notFound } from "next/navigation";
 export async function MedicinesSection() {
   const { data, error } = await medicineService.getAllMedicines({ limit: 24 });
 
-  if (error) notFound();
+  
+  if (error) {
+    return (
+      <section className="py-16 text-center text-red-500">
+        Failed to load categories.
+      </section>
+    );
+  }
+
+
 
   if (!data?.data || data.data.length === 0) {
     return (

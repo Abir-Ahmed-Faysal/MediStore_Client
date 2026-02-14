@@ -13,7 +13,6 @@ import { DeleteCategoryButton } from "./delete-category-button";
 import { EditCategory } from "./edit-category-dialog";
 
 export default function CategoryShowingTable({ data }: { data: Category[] }) {
-   {console.log(data,"form the table data image check ");}
   return (
     <Table>
       <TableHeader>

@@ -94,7 +94,6 @@ export const categoryServices = {
           cookie: cookieStore.toString(),
         },
       });
-      console.log("here is hte json data res", res);
 
       if (!res.ok) {
         return { data: null, error: { message: "Failed to delete category" } };
@@ -102,7 +101,6 @@ export const categoryServices = {
 
       const json = await res.json()
 
-      console.log("here is hte json data", json);
 
       return { data: json.data, error: null };
     } catch (error) {

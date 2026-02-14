@@ -42,14 +42,13 @@ export default function ProfileComponent({ user }: ProfileComponentProps) {
       address: form.address || undefined,
     };
 
-    console.log("UPDATE PAYLOAD:", payload);
-    // TODO: call server action
 
-    console.log("updated payload");
+
+
 
     try {
       const { data } = await updateUser(payload);
-      console.log(data, "<===here is the data");
+     
       toast.success("profile updated successfully", data);
       setForm(data?.data);
       return;

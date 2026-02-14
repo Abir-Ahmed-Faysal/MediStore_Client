@@ -20,8 +20,6 @@ export const userService = {
     try {
       const cookieStore = await cookies();
 
-
-
       const res = await fetch(`${AUTH_URL}/get-session`, {
         headers: {
           Cookie: cookieStore.toString(),
@@ -29,13 +27,11 @@ export const userService = {
         cache: "no-store",
       });
 
-
       const session = await res.json();
 
       if (session === null) {
         return { data: null, error: { message: "Session is missing." } };
       }
-
 
       return { data: session, error: null };
     } catch (err) {
@@ -43,7 +39,6 @@ export const userService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
-
 
 
   getSessionWithRole: async function () {
@@ -84,7 +79,7 @@ export const userService = {
         session.user.role = roleData?.role
       }
 
-      
+
 
 
       return { data: session, error: null };
@@ -93,7 +88,6 @@ export const userService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
-
 
 
   getUsers: async function () {
@@ -121,17 +115,22 @@ export const userService = {
   },
 
 
-
   banUser: async function (id: string) {
+
     try {
       const cookieStore = await cookies()
 
       const res = await fetch(`${API_URL}/admin/users/${id}/ban`, {
+        method: "PATCH"
+        ,
         headers: {
           cookie: cookieStore.toString()
         },
         cache: "no-store"
       })
+
+
+     
 
       if (!res.ok) {
         return { data: null, error: { message: "invalid server response" } }
@@ -139,6 +138,7 @@ export const userService = {
 
       const json = await res.json()
 
+     
 
       return { data: json.data, error: null }
 
@@ -154,6 +154,7 @@ export const userService = {
       const cookieStore = await cookies()
 
       const res = await fetch(`${API_URL}/admin/users/${id}/unban`, {
+        method: "PATCH",
         headers: {
           cookie: cookieStore.toString()
         },

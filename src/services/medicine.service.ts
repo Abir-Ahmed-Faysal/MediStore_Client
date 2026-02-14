@@ -30,11 +30,16 @@ export interface MedicineResponse {
   sellerId: string;
   categoryId: string;
   categoryRef: CategoryRef;
-  reviews?: {
+  reviews: {
     id: string,
-    content: string,
+    userRef:{
+      name: string;
+    image: string;
+    };
+    content: string;
+    rating: string | number;
 
-  }
+  }[]
 }
 
 
@@ -91,7 +96,7 @@ export const medicineService = {
   getAllMedicines: async (
     params?: GetMedicinesParams,
     options?: ServiceOptions,
-  )=> {
+  ) => {
     try {
       const url = new URL(`${API_URL}/medicines`);
 
@@ -164,7 +169,6 @@ export const medicineService = {
         body: JSON.stringify(payload),
         cache: "no-store",
       });
-console.log("hit the res",res);
       if (!res.ok) {
         const error = await res.json();
         return {
@@ -175,7 +179,6 @@ console.log("hit the res",res);
 
 
       const json: ApiResponse<MedicineResponse> = await res.json();
-console.log("hit the res",json);
       return { data: json.data, error: null };
     } catch (error) {
       return {
@@ -190,7 +193,7 @@ console.log("hit the res",json);
 
 
 
-  updateMedicine: async (id: string, payload:Partial< CreateMedicinePayload>) => {
+  updateMedicine: async (id: string, payload: Partial<CreateMedicinePayload>) => {
     try {
       const cookieStore = await cookies();
 
@@ -223,7 +226,7 @@ console.log("hit the res",json);
     }
   },
 
-  
+
   deleteMedicine: async (id: string,) => {
     try {
       const cookieStore = await cookies();

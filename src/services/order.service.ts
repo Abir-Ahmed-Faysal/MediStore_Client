@@ -247,7 +247,7 @@ export const orderService = {
 
       const cookieStore = await cookies()
 
-      console.log("this is the url ", url.toString());
+
 
       const res = await fetch(url.toString(), {
         headers: {
@@ -266,7 +266,7 @@ export const orderService = {
       const json = (await res.json()) as SingleApiResponse<Order>;
 
 
-      console.log('data form the the single seller orders details');
+
 
       return {
         data: json.data,
@@ -288,7 +288,7 @@ export const orderService = {
     error: { message: string } | null;
   }> => {
     try {
-      console.log("hit the get admin orders route");
+     
       const { status, page } = payload.params;
       const cookieStore = await cookies();
 
@@ -307,7 +307,7 @@ export const orderService = {
         cache: "no-store",
       });
 
-      console.log("this is data promise ==>", res, res.ok, cookieStore);
+  
 
       if (!res.ok) {
         return {
@@ -317,7 +317,7 @@ export const orderService = {
       }
 
       const data: SellerOrdersResponse = await res.json();
-      console.log("this is data exist ==>", data, cookieStore);
+      
 
       return { data, error: null };
     } catch (error) {
@@ -352,7 +352,7 @@ export const orderService = {
       const json = (await res.json()) as SingleApiResponse<Order>;
 
 
-      console.log('data form the the single seller orders details');
+  
 
       return {
         data: json.data,

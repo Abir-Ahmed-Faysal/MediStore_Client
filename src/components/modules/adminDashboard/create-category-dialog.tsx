@@ -45,7 +45,7 @@ export function AddNewCategory() {
     },
     onSubmit: async ({ value }) => {
       try {
-        console.log("here is the new value with object making");
+    
         const { data, error } = await AddNewCategoryAction(value);
         if (!data) {
           toast.error("Failed to create a new category");

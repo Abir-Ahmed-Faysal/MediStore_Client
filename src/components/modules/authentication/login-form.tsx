@@ -35,7 +35,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       callbackURL: process.env.CALLBACK_URL,
     });
 
-    console.log(data);
+  
   };
 
 

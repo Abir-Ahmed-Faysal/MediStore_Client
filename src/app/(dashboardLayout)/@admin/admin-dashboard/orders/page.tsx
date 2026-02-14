@@ -22,7 +22,7 @@ const OrderStatus = async ({ searchParams }: OrderStatusPageProps) => {
     );
   }
 
-  console.log(data, "form the orders data find");
+
 
   if (!data) {
     return (

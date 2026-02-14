@@ -64,8 +64,7 @@ export default function SellerOrdersStatusTable({
   orders: OrdersTableProps[];
   pagination: Pagination;
 }) {
-  console.log("hit here");
-  console.log("the data is from the table ", orders, pagination);
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams.toString());

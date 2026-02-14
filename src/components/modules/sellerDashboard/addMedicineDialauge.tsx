@@ -52,7 +52,7 @@ export function AddNewMedicine({ categories }: { categories?: Category[] }) {
     },
     onSubmit: async ({ value }) => {
       try {
-        console.log("this is from the value", value);
+   
         const { data, error } = await addNewMedicineAction(value as any);
         if (!data) {
           toast.error("Failed to add new medicine duplicate medicine");

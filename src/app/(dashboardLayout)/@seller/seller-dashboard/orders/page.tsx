@@ -31,7 +31,7 @@ const OrderStatus = async ({ searchParams }: OrderStatusPageProps) => {
     );
   }
 
-  console.log("this is fomr the ui redner ", orders);
+ 
   return (
     <div className="p-4">
       <SellerOrdersStatusTable

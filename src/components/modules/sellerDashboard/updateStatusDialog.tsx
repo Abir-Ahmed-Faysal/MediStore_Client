@@ -32,7 +32,6 @@ export function UpdateOrderStatusDialogue({ id, status }: Props) {
 
     try {
       const { data } = await updateSellerOderStatus(id, nextStatus);
-      console.log(data, "here is the data value");
       toast.success(`Order status updated to ${nextStatus}`);
       setOpen(false);
       setNextStatus(status as any);

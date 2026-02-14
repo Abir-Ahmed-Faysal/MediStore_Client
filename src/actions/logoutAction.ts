@@ -4,7 +4,7 @@ import { authClient } from "@/lib/auth-client";
 export async function logout() {
   try {
     const data = await authClient.signOut();
-    console.log(data);
+   
 
     return {
       success: true,
