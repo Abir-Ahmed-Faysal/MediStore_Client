@@ -10,7 +10,7 @@ import { cookies } from "next/headers"
 
 
 
-const API_URL = env.API_URL
+const NEXT_PUBLIC_API_URL = env.NEXT_PUBLIC_API_URL
 
 export const statistics = {
     getAdminStatistics: async () => {
@@ -19,7 +19,7 @@ export const statistics = {
 
 
 
-            const res = await fetch(`${API_URL}/statistics/admin`, {
+            const res = await fetch(`${NEXT_PUBLIC_API_URL}/statistics/admin`, {
                 headers: {
                     Cookie: cookieStore
                 },
@@ -50,7 +50,7 @@ export const statistics = {
 
 
 
-            const res = await fetch(`${API_URL}/statistics/seller`, {
+            const res = await fetch(`${NEXT_PUBLIC_API_URL}/statistics/seller`, {
                 headers: {
                     Cookie: cookieStore. toString()
                 },

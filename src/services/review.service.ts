@@ -7,7 +7,7 @@ interface PostReviewPayload {
   rating: number;
 }
 
-const API_URL = env.API_URL
+const NEXT_PUBLIC_API_URL = env.NEXT_PUBLIC_API_URL
 
 export const reviewService = {
   isEligibleToReview: async (medicineId: string) => {
@@ -23,7 +23,7 @@ export const reviewService = {
 
 
       const res = await fetch(
-        `${API_URL}/reviews/${medicineId}/eligibility`,
+        `${NEXT_PUBLIC_API_URL}/reviews/${medicineId}/eligibility`,
         {
           headers: {
             cookie: cookieStore.toString(),
@@ -52,7 +52,7 @@ export const reviewService = {
   createNewReview: async (medicineId: string, payload: PostReviewPayload) => {
     try {
       const cookieStore = await cookies()
-      const res = await fetch(`${API_URL}/reviews/${medicineId}`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/reviews/${medicineId}`, {
         method: "POST",
         credentials: "include",
         headers: {

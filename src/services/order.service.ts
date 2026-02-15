@@ -4,7 +4,7 @@ import { SellerOrderServicesPayload } from "@/types/sellerOrderServicesPayload";
 import { cookies } from "next/headers";
 import { stringify } from "querystring";
 
-const API_URL = env.API_URL;
+const NEXT_PUBLIC_API_URL = env.NEXT_PUBLIC_API_URL;
 
 export type OrderStatus =
   | "PLACED"
@@ -69,7 +69,7 @@ export async function postOrder(payload: {
 }) {
   const cookieStore = await cookies();
 
-  const res = await fetch(`${API_URL}/orders`, {
+  const res = await fetch(`${NEXT_PUBLIC_API_URL}/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export const orderService = {
     try {
       const cookieStore = await cookies();
 
-      const url = new URL(`${API_URL}/orders/user`);
+      const url = new URL(`${NEXT_PUBLIC_API_URL}/orders/user`);
 
       const res = await fetch(url.toString(), {
         headers: {
@@ -134,7 +134,7 @@ export const orderService = {
 
       const cookieStore = await cookies()
 
-      const res = await fetch(`${API_URL}/orders/user/${id}/cancel`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/orders/user/${id}/cancel`, {
         method: "PATCH",
         headers: {
           cookie: cookieStore.toString()
@@ -166,7 +166,7 @@ export const orderService = {
 
       const cookieStore = await cookies()
 
-      const res = await fetch(`${API_URL}/orders/user/${id}`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/orders/user/${id}`, {
         headers: {
           cookie: cookieStore.toString()
         },
@@ -202,7 +202,7 @@ export const orderService = {
       const { status, page } = payload.params;
       const cookieStore = await cookies();
 
-      const url = new URL(`${API_URL}/orders/seller`);
+      const url = new URL(`${NEXT_PUBLIC_API_URL}/orders/seller`);
 
       if (status) {
         url.searchParams.append("status", status);
@@ -243,7 +243,7 @@ export const orderService = {
 
   getSellerOrderDetails: async (id: string) => {
     try {
-      const url = new URL(`${API_URL}/orders/seller/${id}`);
+      const url = new URL(`${NEXT_PUBLIC_API_URL}/orders/seller/${id}`);
 
       const cookieStore = await cookies()
 
@@ -292,7 +292,7 @@ export const orderService = {
       const { status, page } = payload.params;
       const cookieStore = await cookies();
 
-      const url = new URL(`${API_URL}/orders/admin`);
+      const url = new URL(`${NEXT_PUBLIC_API_URL}/orders/admin`);
 
       if (status) {
         url.searchParams.append("status", status);
@@ -331,7 +331,7 @@ export const orderService = {
 
   getAdminOrderDetails: async (id: string) => {
     try {
-      const url = new URL(`${API_URL}/orders/admin/${id}`);
+      const url = new URL(`${NEXT_PUBLIC_API_URL}/orders/admin/${id}`);
 
       const cookieStore = await cookies()
 
@@ -380,7 +380,7 @@ updateSellerOrderStatus: async function (
   try {
     const cookieStore = await cookies();
 
-    const res = await fetch(`${API_URL}/orders/seller/${id}`, {
+    const res = await fetch(`${NEXT_PUBLIC_API_URL}/orders/seller/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

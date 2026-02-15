@@ -19,14 +19,14 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: "/api/auth/:path*",
-  //       destination: `${process.env.NEXT_PUBLIC_BASE_URL}`
-  //     }
-  //   ]
-  // }
+  async rewrites() {
+    return [
+      {
+        source: "/api/auth/:path*",
+        destination: `https://medi-store-server-dun.vercel.app/api/auth/:path*`
+      }
+    ]
+  }
 };
 
 export default nextConfig;

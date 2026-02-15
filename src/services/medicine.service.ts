@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { cookies } from "next/headers";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 
 /* ==============================
    Types
@@ -98,7 +98,7 @@ export const medicineService = {
     options?: ServiceOptions,
   ) => {
     try {
-      const url = new URL(`${API_URL}/medicines`);
+      const url = new URL(`${NEXT_PUBLIC_API_URL}/medicines`);
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -136,7 +136,7 @@ export const medicineService = {
 
   getMedicineById: async (id: string) => {
     try {
-      const res = await fetch(`${API_URL}/medicines/${id}`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/medicines/${id}`, {
         cache: "no-store",
       });
 
@@ -160,7 +160,7 @@ export const medicineService = {
     try {
       const cookieStore = await cookies();
 
-      const res = await fetch(`${API_URL}/seller/medicines`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/seller/medicines`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -197,7 +197,7 @@ export const medicineService = {
     try {
       const cookieStore = await cookies();
 
-      const res = await fetch(`${API_URL}/seller/medicines/${id}`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/seller/medicines/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -231,7 +231,7 @@ export const medicineService = {
     try {
       const cookieStore = await cookies();
 
-      const res = await fetch(`${API_URL}/seller/medicines/${id}`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/seller/medicines/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

@@ -3,14 +3,14 @@ import { cookies } from "next/headers";
 import { ApiResponse } from "@/types";
 import { Category, CreateCategoryPayload, ServiceResult, UpdateCategoryPayload } from "@/types/category.type";
 
-const API_URL = env.API_URL;
+const NEXT_PUBLIC_API_URL = env.NEXT_PUBLIC_API_URL;
 
 
 export const categoryServices = {
   /* -------- GET all categories -------- */
   async getCategories(): Promise<ServiceResult<Category[]>> {
     try {
-      const res = await fetch(`${API_URL}/categories`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/categories`, {
         next: { revalidate: 10 },
       });
 
@@ -33,7 +33,7 @@ export const categoryServices = {
     try {
       const cookieStore = await cookies();
 
-      const res = await fetch(`${API_URL}/admin/categories`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/admin/categories`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export const categoryServices = {
     try {
       const cookieStore = await cookies();
 
-      const res = await fetch(`${API_URL}/admin/categories/${id}`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/admin/categories/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +88,7 @@ export const categoryServices = {
     try {
       const cookieStore = await cookies();
 
-      const res = await fetch(`${API_URL}/admin/categories/${id}`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/admin/categories/${id}`, {
         method: "DELETE",
         headers: {
           cookie: cookieStore.toString(),
