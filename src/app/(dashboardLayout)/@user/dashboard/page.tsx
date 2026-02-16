@@ -5,7 +5,7 @@ type User = {
   name: string;
   email: string;
   phone?: string | null;
-  image_url?: string | null;
+  image?: string | null;
   address?: string | null;
 };
 

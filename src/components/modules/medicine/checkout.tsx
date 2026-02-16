@@ -53,7 +53,7 @@ export function Cart() {
   ============================ */
   const handleCheckout = async () => {
     if (!address) {
-      alert("Please enter delivery address");
+      toast.warning("Please enter delivery address");
       return;
     }
 
@@ -65,10 +65,10 @@ export function Cart() {
       })),
     };
 
-    const data = await createOrderAction(payload);
+    const {data }= await createOrderAction(payload);
 
     if (!data) {
-      toast.success("order create successfully");
+      toast.error("failed to order placed");
     }
 
     if (data) {

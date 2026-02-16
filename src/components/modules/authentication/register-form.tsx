@@ -42,7 +42,7 @@ const formSchema = z.object({
   email: z.email("Invalid email address"),
   password: z.string().min(8, "Minimum length is 8"),
   phone: z.string().regex(/^01\d{9}$/, "Invalid Bangladeshi phone number"),
-  image_URL: z.string().url("Must be a valid image URL"),
+  image: z.string().url("Must be a valid image URL"),
   role: z.enum(["USER", "SELLER"]),
 });
 
@@ -68,7 +68,7 @@ export function RegisterForm(props: React.ComponentProps<typeof Card>) {
       email: "",
       password: "",
       phone: "",
-      image_URL: "",
+      image: "",
       role: "USER",
     },
     validators: {
@@ -76,6 +76,7 @@ export function RegisterForm(props: React.ComponentProps<typeof Card>) {
     },
     onSubmit: async ({ value }) => {
       const toastId = toast.loading("Creating user...");
+      console.log("the register payload is here ",value);
       try {
         const { error, data } = await authClient.signUp.email(value);
 
@@ -174,7 +175,7 @@ export function RegisterForm(props: React.ComponentProps<typeof Card>) {
 
             {/* IMAGE + PHONE */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <form.Field name="image_URL">
+              <form.Field name="image">
                 {(field) => {
                   const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid;

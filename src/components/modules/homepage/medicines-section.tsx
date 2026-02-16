@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MedicineResponse, medicineService } from "@/services/medicine.service";
-import { notFound } from "next/navigation";
+import Link from "next/link";
 
 export async function MedicinesSection() {
   const { data, error } = await medicineService.getAllMedicines({ limit: 24 });
@@ -38,6 +38,7 @@ export async function MedicinesSection() {
 
   return (
     <section className=" py-16">
+      
       <div className="container mx-auto px-6">
         <h2 className="mb-10  text-xl lg:text-2xl">
           Featured Medicines
@@ -56,51 +57,54 @@ export async function MedicinesSection() {
             const inStock = medicine.stock > 0;
 
             return (
-              <Card
-                key={medicine.id}
-                className="group overflow-hidden flex flex-col"
-              >
-                {/* ================= IMAGE ================= */}
-                <div className="relative aspect-square bg-white">
-                  <img
-                    src={medicine.image}
-                    alt={medicine.title}
-                    // fill
-                    className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 768px) 35vw,
-       (max-width: 1200px) 23vw,
-       11vw"
-                  />
+               
+                  <Link
+  key={medicine.id}
+  href={`/medicine/${medicine.id}`}
+  className="block"
+>
+  <Card className="group overflow-hidden flex flex-col">
 
-                  {medicine.isFeatured && (
-                    <span className="absolute left-2 top-2 rounded bg-primary px-2 py-0.5 text-xs text-white">
-                      Featured
-                    </span>
-                  )}
-                </div>
+    {/* ================= IMAGE ================= */}
+    <div className="relative aspect-square bg-white">
+      <img
+        src={medicine.image}
+        alt={medicine.title}
+        className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+        sizes="(max-width: 768px) 35vw,
+               (max-width: 1200px) 23vw,
+               11vw"
+      />
 
-                {/* ================= CONTENT ================= */}
-                <CardContent className="p-3 space-y-1 flex-1">
-                  <h3 className="font-semibold text-sm line-clamp-2">
-                    {medicine.title}
-                  </h3>
+      {medicine.isFeatured && (
+        <span className="absolute left-2 top-2 rounded bg-primary px-2 py-0.5 text-xs text-white">
+          Featured
+        </span>
+      )}
+    </div>
 
-                  <p className="text-sm text-muted-foreground">
-                    ৳ {medicine.price}
-                  </p>
+    {/* ================= CONTENT ================= */}
+    <CardContent className="p-3 space-y-1 flex-1">
+      <h3 className="font-semibold text-sm line-clamp-2">
+        {medicine.title}
+      </h3>
 
-                  <Badge variant={inStock ? "default" : "destructive"}>
-                    {inStock ? "In Stock" : "Out of Stock"}
-                  </Badge>
-                </CardContent>
+      <p className="text-sm text-muted-foreground">
+        ৳ {medicine.price}
+      </p>
 
-                {/* ================= FOOTER ================= */}
-                <CardFooter className="p-4 pt-0">
-                  <Button className="w-full" disabled={!inStock}>
-                    View Details
-                  </Button>
-                </CardFooter>
-              </Card>
+      <Badge
+        variant={inStock ? "default" : "destructive"}
+        className={inStock ? "bg-green-500 hover:bg-green-600" : ""}
+      >
+        {inStock ? "In Stock" : "Out of Stock"}
+      </Badge>
+    </CardContent>
+
+  </Card>
+</Link>
+
+             
             );
           })}
         </div>

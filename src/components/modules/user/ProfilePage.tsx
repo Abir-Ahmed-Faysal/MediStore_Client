@@ -10,7 +10,7 @@ type User = {
   name: string;
   email: string;
   phone?: string | null;
-  image_url?: string | null;
+  image?: string | null;
   address?: string | null;
 };
 
@@ -25,14 +25,14 @@ export default function ProfileComponent({ user }: ProfileComponentProps) {
     name: user.name ?? "",
     phone: user.phone ?? "",
     address: user.address ?? "",
-    image: user.image_url ?? "",
+    image: user.image ?? "",
   });
 
   const isDirty =
     form.name !== (user.name ?? "") ||
     form.phone !== (user.phone ?? "") ||
     form.address !== (user.address ?? "") ||
-    form.image !== (user.image_url ?? "");
+    form.image !== (user.image ?? "");
 
   const handleSave = async () => {
     const payload = {

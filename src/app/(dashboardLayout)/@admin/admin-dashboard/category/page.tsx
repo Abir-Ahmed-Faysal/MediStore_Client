@@ -1,14 +1,17 @@
 import CategoryShowingTable from "@/components/modules/adminDashboard/categoryShowingTable";
 import { AddNewCategory } from "@/components/modules/adminDashboard/create-category-dialog";
 import { categoryServices } from "@/services/category.service";
-import { notFound } from "next/navigation";
 
 
 const Category = async () => {
   const { data, error } = await categoryServices.getCategories();
 
   if (!data || error) {
-    notFound();
+    return (
+      <div>
+        <h1>internal error</h1>
+      </div>
+    );
   }
 
   return (

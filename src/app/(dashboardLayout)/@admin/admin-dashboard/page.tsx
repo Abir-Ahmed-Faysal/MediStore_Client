@@ -1,8 +1,6 @@
 import AdminChart from "@/components/modules/adminDashboard/adminChart";
 import { statistics } from "@/services/statistics.service";
 import { AdminStatisticsData } from "@/types/adminStatics";
-import { notFound } from "next/navigation";
-import React from "react";
 
 const AdminDashboard = async () => {
   const { data, error } = await statistics.getAdminStatistics();

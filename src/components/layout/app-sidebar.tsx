@@ -58,6 +58,9 @@ export function AppSidebar({
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
+                 <SidebarMenuButton asChild>
+                      <Link href={"/"}> Back to home</Link>
+                    </SidebarMenuButton>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

@@ -1,19 +1,19 @@
+import { Role } from "@/constants/roles";
+import { userService } from "@/services/user.service";
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-import { userService } from "./src/services/user.service"
-import { Role } from "./src/constants/roles"
+
 
 export async function proxy(request: NextRequest) {
 
     const { pathname } = request.nextUrl
 
     // unnecessary check for my project
-    if (pathname.startsWith("/verify-email")) {
-        return NextResponse.next();
-    }
+ 
 
     const sessionToken = request.cookies.get("better-auth.session_token")
+    console.log("get the session token ==>",sessionToken);
 
     if (!sessionToken) {
         return NextResponse.redirect(new URL("/login", request.url))

@@ -67,23 +67,32 @@ export async function postOrder(payload: {
   address: string;
   items: { medicineId: string; quantity: number }[];
 }) {
-  const cookieStore = await cookies();
+  try {
 
-  const res = await fetch(`${NEXT_PUBLIC_API_URL}/orders`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      cookie: cookieStore.toString(),
-    },
-    body: JSON.stringify(payload),
-  });
+    const cookieStore = await cookies();
 
-  if (!res.ok) {
-    throw new Error("Failed to place order");
+    const res = await fetch(`${NEXT_PUBLIC_API_URL}/orders/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        cookie: cookieStore.toString(),
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      return { data: null, error: { message: "server response error" } }
+    }
+
+    const json = await res.json()
+
+    return { data: json.data, error: null }
+
+  } catch (error) {
+    return { data: null, error: { message: "internal server error" } }
   }
-
-  return res.json();
 }
+
 
 
 export const orderService = {
@@ -98,12 +107,15 @@ export const orderService = {
 
       const url = new URL(`${NEXT_PUBLIC_API_URL}/orders/user`);
 
+
+
       const res = await fetch(url.toString(), {
         headers: {
           cookie: cookieStore.toString(),
         },
         cache: "no-store",
       });
+
 
       if (!res.ok) {
         return {
@@ -112,8 +124,11 @@ export const orderService = {
         };
       }
 
-      const json: SellerOrdersResponse = await res.json();
 
+
+      const json: SellerOrdersResponse = await res.json();
+      
+console.log('here is the json', json);
 
       return { data: json.data as any, error: null };
     } catch (error) {
@@ -217,7 +232,7 @@ export const orderService = {
         cache: "no-store",
       });
 
-      
+
 
       if (!res.ok) {
         return {
@@ -288,7 +303,7 @@ export const orderService = {
     error: { message: string } | null;
   }> => {
     try {
-     
+
       const { status, page } = payload.params;
       const cookieStore = await cookies();
 
@@ -307,7 +322,7 @@ export const orderService = {
         cache: "no-store",
       });
 
-  
+
 
       if (!res.ok) {
         return {
@@ -317,7 +332,7 @@ export const orderService = {
       }
 
       const data: SellerOrdersResponse = await res.json();
-      
+
 
       return { data, error: null };
     } catch (error) {
@@ -352,7 +367,7 @@ export const orderService = {
       const json = (await res.json()) as SingleApiResponse<Order>;
 
 
-  
+
 
       return {
         data: json.data,
@@ -373,41 +388,41 @@ export const orderService = {
 
 
 
-updateSellerOrderStatus: async function (
-  id: string,
-  status: string
-) {
-  try {
-    const cookieStore = await cookies();
+  updateSellerOrderStatus: async function (
+    id: string,
+    status: string
+  ) {
+    try {
+      const cookieStore = await cookies();
 
-    const res = await fetch(`${NEXT_PUBLIC_API_URL}/orders/seller/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        cookie: cookieStore.toString(),
-      },
-      body: JSON.stringify({ status }),
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => null);
-      return {
-        data: null,
-        error: {
-          message: errorData?.message || "Failed to update order status",
+      const res = await fetch(`${NEXT_PUBLIC_API_URL}/orders/seller/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          cookie: cookieStore.toString(),
         },
-      };
+        body: JSON.stringify({ status }),
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        return {
+          data: null,
+          error: {
+            message: errorData?.message || "Failed to update order status",
+          },
+        };
+      }
+
+      const data = await res.json();
+      return { data, error: null };
+
+    } catch (error) {
+      console.error(error);
+      return { data: null, error: { message: "internal error" } };
     }
-
-    const data = await res.json();
-    return { data, error: null };
-
-  } catch (error) {
-    console.error(error);
-    return { data: null, error: { message: "internal error" } };
-  }
-},
+  },
 
 
 

@@ -1,7 +1,6 @@
 import SellerOrdersStatusTable from "@/components/modules/sellerDashboard/sellerOrdersTable";
 import { orderService } from "@/services/order.service";
 import { SellerOrderServicesPayload } from "@/types/sellerOrderServicesPayload";
-import { notFound } from "next/navigation";
 
 interface OrderStatusPageProps {
   searchParams: Promise<{ page?: string; status?: string }>;
@@ -18,7 +17,7 @@ const OrderStatus = async ({ searchParams }: OrderStatusPageProps) => {
   });
 
   if (!data || error) {
-    notFound();
+<div><h3>internal server error</h3></div>
   }
 
   const orders = data?.data || [];

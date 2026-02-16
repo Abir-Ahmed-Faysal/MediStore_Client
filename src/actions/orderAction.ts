@@ -8,19 +8,17 @@ export async function createOrderAction(payload: {
   items: { medicineId: string; quantity: number }[];
 }) {
   try {
-    const result = await postOrder(payload);
+    const { data, error } = await postOrder(payload);
 
-    
-    revalidateTag("medicines",'max');
+    if (!data) {
+      return { data: null, error }
+    }
 
-    return {
-      success: true,
-      data: result,
-    };
+
+    revalidateTag("medicines", 'max');
+
+    return { data, error: null };
   } catch (error) {
-    return {
-      success: false,
-      message: (error as Error).message,
-    };
+    return { data: null, error: "internal error" };
   }
 }

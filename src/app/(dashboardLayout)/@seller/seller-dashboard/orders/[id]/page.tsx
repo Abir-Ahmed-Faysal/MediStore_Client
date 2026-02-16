@@ -1,5 +1,4 @@
 import { UpdateOrderStatusDialogue } from "@/components/modules/sellerDashboard/updateStatusDialog";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -10,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { orderService } from "@/services/order.service";
-import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{
@@ -23,10 +21,15 @@ export default async function OrderInvoice({ params }: PageProps) {
 
   if (!id) throw new Error("Order ID is required");
 
-  const { data: order, error } =
-    await orderService.getSellerOrderDetails(id);
+  const { data: order, error } = await orderService.getSellerOrderDetails(id);
 
-  if (error || !order) notFound();
+  if (error || !order) {
+    return (
+      <div>
+        <h3>internal server error</h3>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto py-10 space-y-8 bg-white">
@@ -43,13 +46,8 @@ export default async function OrderInvoice({ params }: PageProps) {
         </div>
 
         <div className="flex items-center gap-3">
-          
-
           {/* UI Only – No functionality */}
-               <UpdateOrderStatusDialogue
-                  id={order.id}
-                  status={order.status}
-                />
+          <UpdateOrderStatusDialogue id={order.id} status={order.status} />
         </div>
       </div>
 

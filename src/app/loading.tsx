@@ -5,7 +5,7 @@ export default function Spinner() {
     <div
       role="status"
       aria-live="polite"
-      className="flex items-center justify-center absolute"
+      className="absolute inset-0 flex items-center justify-center"
     >
       <div className="h-12 w-12 rounded-full border-4 border-blue-500/30 border-t-blue-600 animate-spin" />
       <span className="sr-only">Loading...</span>

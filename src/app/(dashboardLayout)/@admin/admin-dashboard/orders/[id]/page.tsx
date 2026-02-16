@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { orderService } from "@/services/order.service";
-import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{
@@ -25,7 +24,13 @@ export default async function OrderInvoice({ params }: PageProps) {
 
   const { data: order, error } = await orderService.getAdminOrderDetails(id);
 
-  if (error || !order) notFound();
+  if (error || !order) {
+    return (
+      <div>
+        <h1>internal server error</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto py-10 space-y-8 bg-white">
