@@ -22,13 +22,9 @@ import { Route } from "@/types";
 import { adminRoutes } from "@/routes/adminRoutes";
 import { sellerRoute } from "@/routes/sellerRotues";
 import { userRoutes } from "@/routes/userRoutes";
-import {
-  MedicineResponse,
-  medicineService,
-} from "@/services/medicine.service";
+import { MedicineResponse, medicineService } from "@/services/medicine.service";
 import { MedicineDialog } from "./hompgaeMedicineDialouge";
 import { searchMedicine } from "@/actions/navbarMedicineAction";
-
 
 interface NavbarProps {
   id: string;
@@ -38,38 +34,37 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ data }: { data: NavbarProps }) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const [userData, setUserData] = useState<NavbarProps | null>(data);
   const [medicine, setMedicine] = useState<MedicineResponse | null>(null);
   const [open, setOpen] = useState(false);
 
   /* -------- search handler -------- */
-const handleSearchChange = async (
-  e: React.ChangeEvent<HTMLInputElement>
-) => {
-  const value = e.target.value.trim();
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
 
-  if (!value) {
-    setMedicine(null);
-    setOpen(false);
-    return;
-  }
-
-  try {
-    const res = await searchMedicine({ search: value });
-
-    if (res && res.data.length > 0) {
-      setMedicine(res.data[0]); 
-      setOpen(true);
-    } else {
+    if (!value) {
       setMedicine(null);
       setOpen(false);
+      return;
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("Failed to search medicine");
-  }
-};
 
+    try {
+      const res = await searchMedicine({ search: value });
+
+      if (res && res.data.length > 0) {
+        setMedicine(res.data[0]);
+        setOpen(true);
+      } else {
+        setMedicine(null);
+        setOpen(false);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to search medicine");
+    }
+  };
 
   /* -------- role based menu -------- */
   let roleContent: Route[] = [];
@@ -101,6 +96,98 @@ const handleSearchChange = async (
     <>
       <section className="border-b">
         <div className="container mx-auto px-4">
+          {/* Mobile Navbar */}
+{/* Mobile Navbar */}
+<div className="flex lg:hidden items-center justify-between py-4">
+  {/* Logo */}
+  <Link href="/" className="flex items-center gap-2">
+    <img
+      src="/images/MediStore.png"
+      alt="MediStore"
+      className="h-8 dark:invert"
+    />
+  </Link>
+
+  {/* Hamburger */}
+  <button onClick={() => setMobileOpen(!mobileOpen)}>
+    <Menu className="size-6" />
+  </button>
+</div>
+
+{mobileOpen && (
+  <div className="lg:hidden flex flex-col gap-4 pb-4 border-t pt-4 text-sm font-medium">
+    {/* Public Routes */}
+    <Link
+      href="/"
+      onClick={() => setMobileOpen(false)}
+      className="hover:text-[rgb(90,191,36)]"
+    >
+      Home
+    </Link>
+
+    <Link
+      href="/medicine"
+      onClick={() => setMobileOpen(false)}
+      className="hover:text-[rgb(90,191,36)]"
+    >
+      Medicine
+    </Link>
+
+    <Link
+      href="/register"
+      onClick={() => setMobileOpen(false)}
+      className="hover:text-[rgb(90,191,36)]"
+    >
+      Become a Seller
+    </Link>
+
+    <Link
+      href="/"
+      onClick={() => setMobileOpen(false)}
+      className="hover:text-[rgb(90,191,36)]"
+    >
+      About Us
+    </Link>
+
+    {/* Role Based Routes */}
+    {roleContent.map((route) => (
+      <div key={route.title} className="pt-2">
+        <h1 className="text-xs text-muted-foreground">{route.title}</h1>
+
+        {route.items.map((item) => (
+          <Link
+            key={item.title}
+            href={item.url}
+            onClick={() => setMobileOpen(false)}
+            className="block py-1"
+          >
+            {item.title}
+          </Link>
+        ))}
+      </div>
+    ))}
+
+    {/* Auth */}
+    {!userData ? (
+      <Link
+        href="/login"
+        onClick={() => setMobileOpen(false)}
+        className="hover:text-[rgb(90,191,36)]"
+      >
+        Login / Register
+      </Link>
+    ) : (
+      <button
+        onClick={handleLogout}
+        className="text-left text-red-500"
+      >
+        Logout
+      </button>
+    )}
+  </div>
+)}
+
+
           <nav className="hidden lg:flex items-center justify-between gap-6 py-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
@@ -183,7 +270,7 @@ const handleSearchChange = async (
               )}
             </div>
           </nav>
-          <div className="flex flex-wrap items-center justify-center gap-6 py-3 text-sm font-medium">
+          <div className="hidden lg:flex flex-wrap items-center justify-center gap-6 py-3 text-sm font-medium">
             <Link
               href="/"
               className="hover:text-[rgb(90,191,36)] transition-colors"
@@ -217,11 +304,7 @@ const handleSearchChange = async (
 
       {/* Medicine Dialog */}
       {medicine && (
-        <MedicineDialog
-          open={open}
-          onOpenChange={setOpen}
-          data={medicine}
-        />
+        <MedicineDialog open={open} onOpenChange={setOpen} data={medicine} />
       )}
     </>
   );

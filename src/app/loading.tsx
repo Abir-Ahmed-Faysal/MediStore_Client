@@ -5,9 +5,10 @@ export default function Spinner() {
     <div
       role="status"
       aria-live="polite"
-      className="absolute inset-0 flex items-center justify-center"
+      aria-busy="true"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm"
     >
-      <div className="h-12 w-12 rounded-full border-4 border-blue-500/30 border-t-blue-600 animate-spin" />
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/30 border-t-primary" />
       <span className="sr-only">Loading...</span>
     </div>
   );
