@@ -214,7 +214,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           {expandedSections.price && (
             <div className="mt-4 space-y-4">
               {/* Price Range Display */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 mb-4 border border-blue-100">
+              <div className="bg-linear-to-r from-blue-50 to-indigo-50 rounded-lg p-3 mb-4 border border-blue-100">
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-semibold text-gray-600">Selected Range</span>
                   <span className="text-lg font-bold text-blue-600">

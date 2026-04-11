@@ -55,7 +55,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     <div className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200">
       {/* Product Image */}
       <Link href={`/medicine/${medicine.id}`}>
-        <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+        <div className="relative h-48 bg-linear-to-br from-gray-50 to-gray-100 overflow-hidden">
           <Image
             src={medicine.image || '/placeholder-medicine.jpg'}
             alt={medicine.title}
@@ -65,7 +65,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           
           {/* Featured Badge */}
           {medicine.isFeatured && (
-            <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+            <div className="absolute top-3 left-3 bg-linear-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
               ⭐ Featured
             </div>
           )}
@@ -143,7 +143,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-xs text-gray-600 mt-2 line-clamp-2 flex-grow">
+        <p className="text-xs text-gray-600 mt-2 line-clamp-2 grow">
           {medicine.description}
         </p>
 
@@ -165,7 +165,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <button
             onClick={handleAddToCart}
             disabled={medicine.stock <= 0}
-            className="flex-1 px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:shadow-lg transition text-xs font-bold disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:from-blue-700 hover:to-blue-800"
+            className="flex-1 px-3 py-2 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:shadow-lg transition text-xs font-bold disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:from-blue-700 hover:to-blue-800"
           >
             <ShoppingCart size={16} />
             <span className="hidden sm:inline">Add</span>
