@@ -38,6 +38,20 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   
   };
 
+  const handleDemoUserLogin = () => {
+    form.setFieldValue("email", "user@example.com");
+    form.setFieldValue("password", "password123");
+  };
+
+  const handleDemoAdminLogin = () => {
+    form.setFieldValue("email", "admin@example.com");
+    form.setFieldValue("password", "password123");
+  };
+
+  const handleDemoSellerLogin = () => {
+    form.setFieldValue("email", "seller@example.com");
+    form.setFieldValue("password", "password123");
+  };
 
   const router= useRouter()
 
@@ -148,6 +162,40 @@ if(data){
         >
           Continue with Google
         </Button>
+
+        {/* Demo Credentials Section */}
+        <div className="border-t pt-4">
+          <p className="text-xs text-center text-muted-foreground mb-3 font-semibold">
+            Demo Credentials (For Testing)
+          </p>
+          <div className="space-y-2">
+            <Button
+              onClick={handleDemoUserLogin}
+              variant="secondary"
+              type="button"
+              className="w-full text-xs"
+            >
+              Login as User (user@example.com)
+            </Button>
+            <Button
+              onClick={handleDemoAdminLogin}
+              variant="secondary"
+              type="button"
+              className="w-full text-xs"
+            >
+              Login as Admin (admin@example.com)
+            </Button>
+            <Button
+              onClick={handleDemoSellerLogin}
+              variant="secondary"
+              type="button"
+              className="w-full text-xs"
+            >
+              Login as Seller (seller@example.com)
+            </Button>
+          </div>
+        </div>
+
          <div className="text-sm text-center text-muted-foreground">
           Register new account?{" "}
           <Link

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 interface AddToCartProps {
   id: string;
@@ -11,6 +11,7 @@ interface AddToCartProps {
   price: number;
   stock: number;
   disabled: boolean;
+  user?: { role: string };
 }
 
 interface CartItem {
@@ -20,7 +21,7 @@ interface CartItem {
   quantity: number;
 }
 
-export function AddToCart({ id, title, price, stock }: AddToCartProps) {
+export function AddToCart({ id, title, price, stock, user }: AddToCartProps) {
   const [quantity, setQuantity] = useState(1);
 
   const increase = () => {
@@ -38,6 +39,16 @@ export function AddToCart({ id, title, price, stock }: AddToCartProps) {
   const convertedPrice = Number(price);
 
   const handleAddToCart = () => {
+    if (!user) {
+      toast.error("login  first");
+      return redirect("/login");
+    }
+
+    if (user.role !== "USER") {
+      toast.error("login as customer first!");
+      return redirect("/login");
+    }
+
     const stored = localStorage.getItem("cart");
     const cart: CartItem[] = stored ? JSON.parse(stored) : [];
 

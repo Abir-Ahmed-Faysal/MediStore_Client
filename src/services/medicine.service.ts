@@ -1,5 +1,4 @@
 import { env } from "@/env";
-import { cookies } from "next/headers";
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -15,6 +14,7 @@ export interface Pagination {
 }
 
 export interface CategoryRef {
+  id: string;
   category_name: string;
 }
 
@@ -37,7 +37,7 @@ export interface MedicineResponse {
     image: string;
     };
     content: string;
-    rating: string | number;
+    rating: number;
 
   }[]
 }
@@ -158,16 +158,14 @@ export const medicineService = {
 
   addNewMedicine: async (payload: CreateMedicinePayload) => {
     try {
-      const cookieStore = await cookies();
-
       const res = await fetch(`${NEXT_PUBLIC_API_URL}/seller/medicines`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Cookie: cookieStore.toString(),
         },
         body: JSON.stringify(payload),
         cache: "no-store",
+        credentials: "include",
       });
       if (!res.ok) {
         const error = await res.json();
@@ -195,16 +193,14 @@ export const medicineService = {
 
   updateMedicine: async (id: string, payload: Partial<CreateMedicinePayload>) => {
     try {
-      const cookieStore = await cookies();
-
       const res = await fetch(`${NEXT_PUBLIC_API_URL}/seller/medicines/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Cookie: cookieStore.toString(),
         },
         body: JSON.stringify(payload),
         cache: "no-store",
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -229,15 +225,13 @@ export const medicineService = {
 
   deleteMedicine: async (id: string,) => {
     try {
-      const cookieStore = await cookies();
-
       const res = await fetch(`${NEXT_PUBLIC_API_URL}/seller/medicines/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Cookie: cookieStore.toString(),
         },
         cache: "no-store",
+        credentials: "include",
       });
 
       if (!res.ok) {

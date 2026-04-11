@@ -1,25 +1,28 @@
 import SellerStatics from "@/components/modules/sellerDashboard/sellerChart";
 import { statistics } from "@/services/statistics.service";
 
-const AdminDashboard = async () => {
+const SellerDashboard = async () => {
   const { data, error } = await statistics.getSellerStatistics();
 
-if (!data || error) {
-  return (
-    <div className="flex items-center justify-center min-h-[300px]">
-      <div className="w-full max-w-md rounded-lg border bg-muted/40 p-6 text-center">
-        <p className="text-sm text-muted-foreground">
-          No statistics data found.
-        </p>
+  if (error) {
+    return (
+      <div className="rounded-lg border-2 border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-8 text-center">
+        <p className="text-red-700 dark:text-red-400 font-medium">Failed to load seller statistics</p>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
+  if (!data) {
+    return (
+      <div className="rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 p-12 text-center">
+        <p className="text-slate-500 dark:text-slate-400 font-medium">No statistics data found</p>
+      </div>
+    );
+  }
 
   const getData = data?.data;
 
-  return <SellerStatics error={error} data={getData}></SellerStatics>;
+  return <SellerStatics error={error} data={getData} />;
 };
 
-export default AdminDashboard;
+export default SellerDashboard;

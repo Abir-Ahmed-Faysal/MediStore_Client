@@ -16,30 +16,31 @@ const OrderStatus = async ({ searchParams }: OrderStatusPageProps) => {
     params: { page, status } as SellerOrderServicesPayload,
   });
 
-  if (!data || error) {
-<div><h3>internal server error</h3></div>
+  if (error) {
+    return (
+      <div className="rounded-lg border-2 border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-8 text-center">
+        <p className="text-red-700 dark:text-red-400 font-medium">Failed to load orders</p>
+      </div>
+    );
   }
 
   const orders = data?.data || [];
 
   if (orders.length === 0) {
     return (
-      <div className="text-center pt-20 text-gray-500">
-        <p className="text-lg">No orders found.</p>
+      <div className="rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 p-12 text-center">
+        <p className="text-slate-500 dark:text-slate-400 font-medium">No orders found</p>
       </div>
     );
   }
 
- 
   return (
-    <div className="p-4">
-      <SellerOrdersStatusTable
-        orders={orders}
-        pagination={
-          data?.meta || { page: 1, limit: 10, total: 0, totalPage: 1 }
-        }
-      />
-    </div>
+    <SellerOrdersStatusTable
+      orders={orders}
+      pagination={
+        data?.meta || { page: 1, limit: 10, total: 0, totalPage: 1 }
+      }
+    />
   );
 };
 
