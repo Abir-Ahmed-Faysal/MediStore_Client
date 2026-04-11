@@ -17,7 +17,10 @@ import type { NextRequest } from "next/server"
 async function getSessionIfValid(request: NextRequest) {
   try {
     // Extract session token from better-auth
-    const sessionToken = request.cookies.get("better-auth.session_token")?.value;
+    // Handle both production (__Secure- prefix) and dev (no prefix)
+    const sessionToken = 
+      request.cookies.get("__Secure-better-auth.session_token")?.value ||
+      request.cookies.get("better-auth.session_token")?.value;
     
     if (!sessionToken) {
       return { isValid: false, data: null };

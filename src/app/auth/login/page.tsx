@@ -5,6 +5,7 @@ import { AuthLayout } from '@/components/auth/AuthLayout';
 import { AuthForm } from '@/components/auth/AuthForm';
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { useAuth } from '@/hooks/useAuth';
+import { DEMO_CREDENTIALS } from '@/constants/demo-credentials';
 
 export default function LoginPage() {
   const { login, isLoading, error, clearError } = useAuth();
@@ -42,18 +43,12 @@ export default function LoginPage() {
     }
   };
 
-  const handleDemoLogin = (type: 'user' | 'admin') => {
-    if (type === 'user') {
-      handleLogin({
-        email: 'user@medistore.com',
-        password: 'User@123456',
-      });
-    } else {
-      handleLogin({
-        email: 'faysal@gmail.com',
-        password: 'faysal@123',
-      });
-    }
+  const handleDemoLogin = (type: 'admin') => {
+    // Only admin demo login is available
+    handleLogin({
+      email: DEMO_CREDENTIALS.email,
+      password: DEMO_CREDENTIALS.password,
+    });
   };
 
   const displayError = formError || error?.message;
@@ -121,23 +116,15 @@ export default function LoginPage() {
         <div className="space-y-2">
           <button
             type="button"
-            onClick={() => handleDemoLogin('user')}
-            disabled={isLoading}
-            className="w-full px-4 py-2.5 text-sm font-medium border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            👤 Login as Customer
-          </button>
-          <button
-            type="button"
             onClick={() => handleDemoLogin('admin')}
             disabled={isLoading}
             className="w-full px-4 py-2.5 text-sm font-medium border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            👨‍💼 Login as Admin
+            👨‍💼 Login as Admin Demo
           </button>
         </div>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 text-center">
-          Click to auto-fill test credentials
+          Email: {DEMO_CREDENTIALS.email}
         </p>
       </div>
     </AuthLayout>
