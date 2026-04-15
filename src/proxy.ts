@@ -51,16 +51,22 @@ function getRouteOwner(pathname: string): string | null {
   if (pathname.startsWith("/admin-dashboard")) return "admin";
   // Seller routes
   if (pathname.startsWith("/seller-dashboard")) return "seller";
+  // Vendor routes
+  if (pathname.startsWith("/vendor-dashboard")) return "vendor";
+  // Manager routes
+  if (pathname.startsWith("/manager-dashboard")) return "manager";
   // User dashboard routes
   if (pathname.startsWith("/dashboard")) return "user";
   // Public routes
   return null;
 }
 
-function getRoleType(role: string): "admin" | "seller" | "user" | null {
+function getRoleType(role: string): "admin" | "seller" | "user" | "vendor" | "manager" | null {
   if (role === Role.admin) return "admin";
   if (role === Role.seller) return "seller";
   if (role === Role.user) return "user";
+  if (role === "VENDOR") return "vendor";
+  if (role === "MANAGER") return "manager";
   return null;
 }
 
@@ -84,7 +90,9 @@ export async function proxy(request: NextRequest) {
     if (isAuth && isAuthenticated) {
       // Redirect to default dashboard for their role
       const defaultRoute = userRole === "admin" ? "/admin-dashboard" : 
-                          userRole === "seller" ? "/seller-dashboard" : 
+                          userRole === "seller" ? "/seller-dashboard" :
+                          userRole === "vendor" ? "/vendor-dashboard" :
+                          userRole === "manager" ? "/manager-dashboard" : 
                           "/dashboard";
       return NextResponse.redirect(new URL(defaultRoute, request.url));
     }
@@ -112,7 +120,9 @@ export async function proxy(request: NextRequest) {
     if (routeOwner !== userRole && routeOwner !== "common") {
       // User trying to access wrong dashboard
       const defaultRoute = userRole === "admin" ? "/admin-dashboard" : 
-                          userRole === "seller" ? "/seller-dashboard" : 
+                          userRole === "seller" ? "/seller-dashboard" :
+                          userRole === "vendor" ? "/vendor-dashboard" :
+                          userRole === "manager" ? "/manager-dashboard" : 
                           "/dashboard";
       return NextResponse.redirect(new URL(defaultRoute, request.url));
     }

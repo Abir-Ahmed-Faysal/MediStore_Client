@@ -20,20 +20,20 @@ export interface SearchFilters {
 }
 
 export interface SearchResult {
-  medicineId: string;
+  id: string;
   name: string;
   description: string;
+  manufacturer?: string;
+  price?: string;
+  stock?: number;
   relevanceScore: number;
-  matchedFields: string[];
-  image?: string;
-  price?: number;
-  rating?: number;
+  reasoning?: string;
 }
 
 export interface SmartSearchResponse {
   query: string;
   results: SearchResult[];
-  suggestions: SuggestionItem[];
+  suggestions: string[];
   executionTime: number;
   totalResults: number;
 }

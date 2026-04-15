@@ -43,10 +43,11 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ product }) => {
     <div className="flex flex-col gap-4">
       {/* Main Image */}
       <div className="relative w-full aspect-square bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 group">
-        <img
+        <Image
           src={images[selectedIndex]}
           alt={`${product.title} - View ${selectedIndex + 1}`}
-          className="w-full h-full object-contain p-4"
+          fill
+          className="object-contain p-4"
         />
 
         {/* Zoom Indicator */}
@@ -95,7 +96,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ product }) => {
                   : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
               }`}
             >
-              <img src={image} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-contain p-1" />
+              <Image src={image} alt={`Thumbnail ${index + 1}`} width={64} height={64} className="object-contain p-1" />
             </button>
           ))}
         </div>

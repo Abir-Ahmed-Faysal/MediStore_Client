@@ -1,23 +1,61 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 
 export const SocialLoginButtons: React.FC<{ isLoading?: boolean }> = ({ isLoading = false }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const handleGoogleLogin = async () => {
     try {
-      alert('Google login would redirect to: https://accounts.google.com/o/oauth2/v2/auth?...');
-      // In production: implement OAuth flow
+      setIsProcessing(true);
+      
+      // For better-auth, we need to get the OAuth URL and redirect
+      // The OAuth sign-in URL follows the pattern: /api/auth/signin/provider
+      const callbackUrl = `${window.location.origin}/dashboard`;
+      const oauthUrl = new URL('/api/auth/signin/google', process.env.NEXT_PUBLIC_API_URL || window.location.origin);
+      oauthUrl.searchParams.set('redirect_uri', callbackUrl);
+      
+      // better-auth OAuth endpoint
+      const response = await fetch(`/api/auth/signin/google?redirect_uri=${encodeURIComponent(callbackUrl)}`, {
+        method: 'GET',
+      });
+
+      if (response.ok) {
+        // Redirect to OAuth provider
+        window.location.href = response.url;
+      } else {
+        toast.error('Failed to initiate Google Sign-in');
+      }
     } catch (error) {
       console.error('Google login error:', error);
+      toast.error('Google Sign-in is currently unavailable. Please use email/password login.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   const handleFacebookLogin = async () => {
     try {
-      alert('Facebook login would redirect to: https://www.facebook.com/v18.0/dialog/oauth?...');
-      // In production: implement OAuth flow
+      setIsProcessing(true);
+      
+      // Facebook OAuth through better-auth when available
+      const callbackUrl = `${window.location.origin}/dashboard`;
+      
+      const response = await fetch(`/api/auth/signin/facebook?redirect_uri=${encodeURIComponent(callbackUrl)}`, {
+        method: 'GET',
+      });
+
+      if (response.ok) {
+        window.location.href = response.url;
+      } else {
+        toast.info('Facebook Sign-in is currently unavailable. Please use email/password login.');
+      }
     } catch (error) {
       console.error('Facebook login error:', error);
+      toast.info('Facebook Sign-in is currently unavailable. Please use email/password login.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -39,7 +77,7 @@ export const SocialLoginButtons: React.FC<{ isLoading?: boolean }> = ({ isLoadin
         <button
           type="button"
           onClick={handleGoogleLogin}
-          disabled={isLoading}
+          disabled={isLoading || isProcessing}
           className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -60,14 +98,14 @@ export const SocialLoginButtons: React.FC<{ isLoading?: boolean }> = ({ isLoadin
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-          <span className="text-sm font-medium">Google</span>
+          <span className="text-sm font-medium">{isProcessing ? 'Loading...' : 'Google'}</span>
         </button>
 
         {/* Facebook */}
         <button
           type="button"
           onClick={handleFacebookLogin}
-          disabled={isLoading}
+          disabled={isLoading || isProcessing}
           className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -76,13 +114,13 @@ export const SocialLoginButtons: React.FC<{ isLoading?: boolean }> = ({ isLoadin
               d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
             />
           </svg>
-          <span className="text-sm font-medium">Facebook</span>
+          <span className="text-sm font-medium">{isProcessing ? 'Loading...' : 'Facebook'}</span>
         </button>
       </div>
 
       {/* Note about demo credentials */}
       <p className="text-xs text-gray-500 text-center">
-        Use demo credentials to test the application
+        Use demo credentials or social login to test the application
       </p>
     </div>
   );

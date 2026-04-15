@@ -1,5 +1,6 @@
 import { medicineService } from "@/services/medicine.service";
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/cart";
 import { Button } from "@/components/ui/button";
 import MedicineFilters from "@/components/modules/medicine/medicineFilter";
@@ -65,10 +66,11 @@ export default async function MedicinesPage({ searchParams }: PageProps) {
           >
             {/* Image */}
             <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-              <img
+              <Image
                 src={medicine.image}
                 alt={medicine.title}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
             </div>
 

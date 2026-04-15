@@ -8,12 +8,11 @@ import { aiService } from '@/services/ai.service';
 import {
   SmartSearchResponse,
   SearchResult,
-  SuggestionItem,
 } from '@/types/ai.types';
 
 interface UseSmartSearchReturn {
   results: SearchResult[];
-  suggestions: SuggestionItem[];
+  suggestions: string[];
   isLoading: boolean;
   error: string | null;
   hasSearched: boolean;
@@ -25,7 +24,7 @@ interface UseSmartSearchReturn {
 
 export function useSmartSearch(): UseSmartSearchReturn {
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
@@ -67,12 +66,7 @@ export function useSmartSearch(): UseSmartSearchReturn {
 
     try {
       const items = await aiService.getSearchSuggestions(query);
-      setSuggestions(
-        items.map((item) => ({
-          text: item,
-          type: 'medicine' as const,
-        }))
-      );
+      setSuggestions(items);
     } catch (err) {
       console.error('Error fetching suggestions:', err);
     }
@@ -81,13 +75,7 @@ export function useSmartSearch(): UseSmartSearchReturn {
   const getTrending = useCallback(async () => {
     try {
       const trending = await aiService.getTrendingSearches();
-      setSuggestions(
-        trending.map((item) => ({
-          text: item,
-          type: 'medicine' as const,
-          trending: true,
-        }))
-      );
+      setSuggestions(trending);
     } catch (err) {
       console.error('Error fetching trending:', err);
     }

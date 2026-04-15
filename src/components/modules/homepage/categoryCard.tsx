@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 type CategoryCardProps = {
   name: string;
@@ -20,7 +21,7 @@ export function CategoryCard({ name, icon }: CategoryCardProps) {
 
         {/* image div */}
         <div className="shrink-0">
-          <img src={icon} alt={name} className="h-10 w-10 object-contain" />
+          <Image src={icon} alt={name} width={40} height={40} className="object-contain" />
         </div>
       </div>
     </Link>

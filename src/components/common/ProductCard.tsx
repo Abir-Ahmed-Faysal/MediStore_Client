@@ -76,7 +76,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               e.preventDefault();
               handleWishlist();
             }}
-            className="absolute top-3 right-3 p-2.5 bg-white rounded-full shadow-md hover:bg-red-50 hover:shadow-lg transition-all duration-200 group/heart"
+            aria-label={isWishlisted ? `Remove ${medicine.title} from wishlist` : `Add ${medicine.title} to wishlist`}
+            className="absolute top-3 right-3 p-2.5 bg-white rounded-full shadow-md hover:bg-red-50 hover:shadow-lg transition-all duration-200 group/heart focus:outline-none focus:ring-2 focus:ring-red-500"
           >
             <Heart
               size={20}
@@ -158,14 +159,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="flex gap-2">
           <Link
             href={`/medicine/${medicine.id}`}
-            className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-center text-xs font-bold hover:shadow-md"
+            className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-center text-xs font-bold hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+            aria-label={`View details for ${medicine.title}`}
           >
             Details
           </Link>
           <button
             onClick={handleAddToCart}
             disabled={medicine.stock <= 0}
-            className="flex-1 px-3 py-2 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:shadow-lg transition text-xs font-bold disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:from-blue-700 hover:to-blue-800"
+            aria-label={medicine.stock <= 0 ? `${medicine.title} is out of stock` : `Add ${medicine.title} to cart`}
+            className="flex-1 px-3 py-2 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:shadow-lg transition text-xs font-bold disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <ShoppingCart size={16} />
             <span className="hidden sm:inline">Add</span>

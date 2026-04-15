@@ -3,6 +3,7 @@
 import { updateUser } from "@/actions/updateUserData";
 import { Button, Input } from "@base-ui/react";
 import { Label } from "@radix-ui/react-label";
+import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -66,10 +67,12 @@ export default function ProfileComponent({ user }: ProfileComponentProps) {
       <div className="flex gap-6">
         {/* LEFT PROFILE CARD */}
         <aside className="w-64 rounded-xl border bg-white p-6 flex flex-col items-center shadow-sm">
-          <img
+          <Image
             src={form.image || DEFAULT_AVATAR}
             alt="Profile"
-            className="w-24 h-24 rounded-full object-cover border"
+            width={96}
+            height={96}
+            className="rounded-full object-cover border"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = DEFAULT_AVATAR;
             }}

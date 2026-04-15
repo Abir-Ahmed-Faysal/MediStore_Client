@@ -23,11 +23,15 @@ export default async function DashboardLayout({
   user,
   seller,
   admin,
+  vendor,
+  manager,
 }: {
   children: React.ReactNode;
   admin: React.ReactNode;
   user: React.ReactNode;
   seller: React.ReactNode;
+  vendor: React.ReactNode;
+  manager: React.ReactNode;
 }) {
   const { data } = await userService.getSessionWithRole();
   const userData = data?.user;
@@ -46,6 +50,12 @@ export default async function DashboardLayout({
       break;
     case "SELLER":
       roleContent = seller;
+      break;
+    case "VENDOR":
+      roleContent = vendor;
+      break;
+    case "MANAGER":
+      roleContent = manager;
       break;
     case "USER":
       roleContent = user;

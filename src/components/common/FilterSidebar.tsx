@@ -83,7 +83,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {hasActiveFilters && (
           <button
             onClick={onClearFilters}
-            className="w-full px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
+            aria-label="Clear all selected filters and reset to show all products"
+            className="w-full px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Clear All Filters
           </button>
@@ -93,7 +94,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className={isMobile ? 'px-4' : ''}>
           <button
             onClick={() => toggleSection('category')}
-            className="w-full flex items-center justify-between font-semibold text-gray-900 hover:text-blue-600 transition"
+            aria-expanded={expandedSections.category}
+            aria-controls="category-filter"
+            className="w-full flex items-center justify-between font-semibold text-gray-900 hover:text-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1"
           >
             <span>Category</span>
             <ChevronDown
@@ -101,12 +104,13 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               className={`transition-transform ${
                 expandedSections.category ? 'rotate-180' : ''
               }`}
+              aria-hidden="true"
             />
           </button>
 
           {expandedSections.category && (
-            <div className="mt-3 space-y-2">
-              <label className="flex items-center gap-3 cursor-pointer group">
+            <div id="category-filter" className="mt-3 space-y-2" role="group" aria-label="Category options">
+              <label className="flex items-center gap-3 cursor-pointer group focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 rounded px-1">
                 <input
                   type="radio"
                   name="category"
@@ -114,7 +118,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   checked={selectedCategory === ''}
                   onChange={() => onCategoryChange?.('')}
                   disabled={isLoading}
-                  className="w-4 h-4 text-blue-600 cursor-pointer disabled:opacity-50"
+                  aria-label="Show all categories"
+                  className="w-4 h-4 text-blue-600 cursor-pointer disabled:opacity-50 focus:ring-2 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700 group-hover:text-gray-900">
                   All Categories
@@ -122,7 +127,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </label>
 
               {categories.map(category => (
-                <label key={category.value} className="flex items-center gap-3 cursor-pointer group">
+                <label key={category.value} className="flex items-center gap-3 cursor-pointer group focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 rounded px-1">
                   <input
                     type="radio"
                     name="category"
@@ -130,7 +135,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     checked={selectedCategory === category.value}
                     onChange={() => onCategoryChange?.(category.value)}
                     disabled={isLoading}
-                    className="w-4 h-4 text-blue-600 cursor-pointer disabled:opacity-50"
+                    aria-label={`Filter by ${category.label}`}
+                    className="w-4 h-4 text-blue-600 cursor-pointer disabled:opacity-50 focus:ring-2 focus:ring-blue-500"
                   />
                   <span className="text-sm text-gray-700 group-hover:text-gray-900">
                     {category.label}

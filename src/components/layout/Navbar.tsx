@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, X, ShoppingCart, LogOut, Home, LogIn, UserPlus, Settings, Heart, Bell } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -101,7 +102,14 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
           <div className="hidden md:flex items-center justify-between h-16 gap-4">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0 flex items-center gap-2 group">
-              <img src="/images/MediStore.png" alt="MediStore" className="h-8 dark:invert transition-transform group-hover:scale-105" />
+              <Image
+                src="/images/MediStore.png"
+                alt="MediStore"
+                width={32}
+                height={32}
+                className="dark:invert transition-transform group-hover:scale-105"
+                priority
+              />
               <span className="font-bold text-lg hidden lg:inline text-slate-900 dark:text-white">MediStore</span>
             </Link>
 
@@ -112,9 +120,14 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
                   onChange={handleSearchChange}
                   type="text"
                   placeholder="Search medicines..."
+                  aria-label="Search for medicines by name or category"
                   className="w-full px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-900 dark:border-slate-700 dark:text-white transition-all"
                 />
-                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                <button
+                  aria-label="Submit search"
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded"
+                >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
@@ -167,7 +180,11 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                      <button
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        aria-label={`User menu for ${data.name}`}
+                        aria-haspopup="true"
+                      >
                         <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-sm font-semibold">
                           {data.name.charAt(0).toUpperCase()}
                         </div>
@@ -208,12 +225,17 @@ export const Navbar = ({ data }: { data: NavbarProps }) => {
           {/* Mobile Navigation */}
           <div className="md:hidden flex items-center justify-between h-14">
             <Link href="/" className="flex-shrink-0 flex items-center gap-2">
-              <img src="/images/MediStore.png" alt="MediStore" className="h-7 dark:invert" />
+              <Image src="/images/MediStore.png" alt="MediStore" width={28} height={28} className="dark:invert" />
             </Link>
 
             <div className="flex items-center gap-2">
               <ModeToggle />
-              <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+                aria-expanded={mobileOpen}
+                className="p-2 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
                 {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>

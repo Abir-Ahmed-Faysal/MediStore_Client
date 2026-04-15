@@ -9,6 +9,7 @@ import {
   TableRow,
   TableFooter,
 } from "@/components/ui/table";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AddNewMedicine } from "./addMedicineDialauge";
 import { DeleteMedicine } from "./deleteMedineDialauge";
@@ -81,7 +82,7 @@ export default function MedicineTable({
           {medicines.map((medicine) => (
             <TableRow key={medicine.id}>
               <TableCell>
-                <img src={medicine.image} className="w-10 h-10 object-cover" />
+                <Image src={medicine.image} alt={medicine.title} width={40} height={40} className="object-cover" />
               </TableCell>
               <TableCell>{medicine?.title}</TableCell>
               <TableCell>{medicine?.manufacturer}</TableCell>

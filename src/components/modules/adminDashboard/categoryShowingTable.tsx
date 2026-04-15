@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Image from "next/image";
 import { Category } from "@/types/category.type";
 import { DeleteCategoryButton } from "./delete-category-button";
 import { EditCategory } from "./edit-category-dialog";
@@ -31,10 +32,12 @@ export default function CategoryShowingTable({ data }: { data: Category[] }) {
               
               {category.icon ? (
                
-                <img
+                <Image
                   src={category.icon}
                   alt={category.category_name}
-                  className="w-10 h-10 rounded object-cover"
+                  width={40}
+                  height={40}
+                  className="rounded object-cover"
                 />
               ) : (
                 <div className="w-10 h-10 rounded bg-muted flex items-center justify-center text-xs">

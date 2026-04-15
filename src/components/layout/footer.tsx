@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 
 interface User {
@@ -39,10 +40,10 @@ export function Footer({ data }: { data: User }) {
   };
 
   const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
+    { icon: Facebook, href: 'https://facebook.com/medistore', label: 'Facebook' },
+    { icon: Twitter, href: 'https://twitter.com/medistore', label: 'Twitter' },
+    { icon: Linkedin, href: 'https://linkedin.com/company/medistore', label: 'LinkedIn' },
+    { icon: Instagram, href: 'https://instagram.com/medistore', label: 'Instagram' },
   ];
 
   return (
@@ -54,7 +55,7 @@ export function Footer({ data }: { data: User }) {
           <div className="lg:col-span-1">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <img src="/images/MediStore.png" alt="MediStore" className="h-8 invert-0 dark:invert" />
+                <Image src="/images/MediStore.png" alt="MediStore" width={32} height={32} className="invert-0 dark:invert" />
                 <span className="font-bold text-lg text-white">MediStore</span>
               </div>
               <p className="text-sm text-slate-400 leading-relaxed">
@@ -64,15 +65,17 @@ export function Footer({ data }: { data: User }) {
                 {socialLinks.map((social) => {
                   const Icon = social.icon;
                   return (
-                    <Link
+                    <a
                       key={social.label}
                       href={social.href}
                       title={social.label}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white transition-all flex items-center justify-center"
                     >
                       <Icon className="w-4 h-4" />
                       <span className="sr-only">{social.label}</span>
-                    </Link>
+                    </a>
                   );
                 })}
               </div>
