@@ -15,6 +15,7 @@ export default function MedicineFilters() {
     manufacturer: searchParams.get("manufacturer") ?? "",
     minPrice: searchParams.get("minPrice") ?? "",
     maxPrice: searchParams.get("maxPrice") ?? "",
+    sortBy: searchParams.get("sortBy") ?? "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -33,7 +34,7 @@ export default function MedicineFilters() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid gap-4 rounded-lg border bg-background p-4 md:grid-cols-5"
+      className="grid gap-4 rounded-lg border bg-background p-4 md:grid-cols-6"
     >
       <Input
         placeholder="Search medicine"
@@ -77,8 +78,23 @@ export default function MedicineFilters() {
         }
       />
 
-      <div className="flex gap-2 md:col-span-5">
-        <Button className="hover:bg-[rgb(90,191,36)]  bg-[rgb(90,191,36)]" type="submit">search</Button>
+      <select
+        value={filters.sortBy}
+        onChange={(e) =>
+          setFilters({ ...filters, sortBy: e.target.value })
+        }
+        className="px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        <option value="">Sort by...</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+        <option value="name_asc">Name: A to Z</option>
+        <option value="name_desc">Name: Z to A</option>
+        <option value="newest">Newest First</option>
+      </select>
+
+      <div className="flex gap-2 md:col-span-6">
+        <Button className="hover:bg-[rgb(90,191,36)]  bg-[rgb(90,191,36)]" type="submit">Search</Button>
 
       </div>
     </form>

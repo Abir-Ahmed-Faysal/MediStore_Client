@@ -18,6 +18,7 @@ type PageProps = {
     maxPrice?: string;
     page?: string;
     limit?: string;
+    sortBy?: string;
   }>;
 };
 
@@ -38,6 +39,7 @@ export default async function MedicinesPage({ searchParams }: PageProps) {
       page,
       limit,
       skip,
+      sortBy: params.sortBy,
     },
     { revalidate: 10 },
   );

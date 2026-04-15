@@ -1,10 +1,17 @@
 import { env } from "@/env";
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
-
 /* ==============================
    Types
 ================================ */
+
+const getApiUrl = () => {
+  // For server-side, use process.env directly
+  if (typeof window === 'undefined') {
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  }
+  // For client-side, use env
+  return env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+};
 
 export interface Pagination {
   total: number;
@@ -73,6 +80,7 @@ export interface GetMedicinesParams {
   minPrice?: number;
   maxPrice?: number;
   skip?: number;
+  sortBy?: string;
 }
 
 
@@ -98,7 +106,8 @@ export const medicineService = {
     options?: ServiceOptions,
   ) => {
     try {
-      const url = new URL(`${NEXT_PUBLIC_API_URL}/medicines`);
+      const apiUrl = getApiUrl();
+      const url = new URL(`${apiUrl}/medicines`);
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -136,7 +145,8 @@ export const medicineService = {
 
   getMedicineById: async (id: string) => {
     try {
-      const res = await fetch(`${NEXT_PUBLIC_API_URL}/medicines/${id}`, {
+      const apiUrl = getApiUrl();
+      const res = await fetch(`${apiUrl}/medicines/${id}`, {
         cache: "no-store",
       });
 
@@ -158,7 +168,8 @@ export const medicineService = {
 
   addNewMedicine: async (payload: CreateMedicinePayload) => {
     try {
-      const res = await fetch(`${NEXT_PUBLIC_API_URL}/seller/medicines`, {
+      const apiUrl = getApiUrl();
+      const res = await fetch(`${apiUrl}/seller/medicines`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -193,7 +204,8 @@ export const medicineService = {
 
   updateMedicine: async (id: string, payload: Partial<CreateMedicinePayload>) => {
     try {
-      const res = await fetch(`${NEXT_PUBLIC_API_URL}/seller/medicines/${id}`, {
+      const apiUrl = getApiUrl();
+      const res = await fetch(`${apiUrl}/seller/medicines/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -225,7 +237,8 @@ export const medicineService = {
 
   deleteMedicine: async (id: string,) => {
     try {
-      const res = await fetch(`${NEXT_PUBLIC_API_URL}/seller/medicines/${id}`, {
+      const apiUrl = getApiUrl();
+      const res = await fetch(`${apiUrl}/seller/medicines/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
